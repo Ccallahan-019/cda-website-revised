@@ -38,7 +38,7 @@ export async function Footer() {
               <Link href="/">
                 <Flex align="center">
                   {logo && typeof logo === 'object' && (
-                    <Logo imageClassName="h-[4rem] w-full" {...logo} />
+                    <Logo imageClassName="h-[4rem] w-auto" {...logo} />
                   )}
                 </Flex>
               </Link>
