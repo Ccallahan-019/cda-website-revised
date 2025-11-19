@@ -19,9 +19,6 @@ import { formatDateTime } from '@/utilities/formatDateTime'
 import { Text } from '@/components/UI/RadixComponents/Typography/Text'
 import { Event } from '@/payload-types'
 
-export const revalidate = 3600
-export const dynamicParams = true
-
 type Args = {
   params: Promise<{
     slug?: string

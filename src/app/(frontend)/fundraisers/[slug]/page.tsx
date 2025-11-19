@@ -17,9 +17,6 @@ import { GET_FUNDRAISER_BY_SLUG, GET_FUNDRAISER_SLUGS } from '@/graphql/queries/
 import { FundraiserHero } from '@/heros/FundraiserHero'
 import { Fundraiser } from '@/payload-types'
 
-export const revalidate = 3600
-export const dynamicParams = true
-
 type Args = {
   params: Promise<{
     slug?: string

@@ -13,9 +13,6 @@ import { Metadata } from 'next'
 import { generateMeta } from '@/utilities/generateMeta'
 import { Document } from 'payload'
 
-export const revalidate = 3600
-export const dynamicParams = true
-
 type Args = {
   params: Promise<{
     slug?: string

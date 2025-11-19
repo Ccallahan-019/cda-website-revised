@@ -20,9 +20,6 @@ import { Section } from '@/components/UI/RadixComponents/Layout/Section'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { CMSLink } from '@/components/Link'
 
-export const revalidate = 3600
-export const dynamicParams = true
-
 type Args = {
   params: Promise<{
     slug?: string

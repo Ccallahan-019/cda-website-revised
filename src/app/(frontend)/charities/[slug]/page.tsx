@@ -17,9 +17,6 @@ import { Charity } from '@/payload-types'
 import { GET_CHARITY_BY_SLUG, GET_CHARITY_SLUGS } from '@/graphql/queries/pages/charity'
 import { CharityHero } from '@/heros/CharityHero'
 
-export const revalidate = 3600
-export const dynamicParams = true
-
 type Args = {
   params: Promise<{
     slug?: string
