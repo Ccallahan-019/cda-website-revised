@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import '@radix-ui/themes/styles.css'
 import 'react-day-picker/style.css'
 import 'swiper/css'
