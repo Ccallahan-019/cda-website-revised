@@ -87,7 +87,7 @@ export const MediaBlock: Block = {
     {
       name: 'looping',
       type: 'checkbox',
-      defaultValue: 'true',
+      defaultValue: true,
       admin: {
         condition: (_, siblingData) => siblingData.contentType === 'gallery',
         description:

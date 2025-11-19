@@ -461,6 +461,13 @@ export const enum_footer_nav_items_link_color = pgEnum('enum_footer_nav_items_li
   'primary',
   'secondary',
 ])
+export const enum_footer_social_media_platform = pgEnum('enum_footer_social_media_platform', [
+  'linkedin',
+  'facebook',
+  'instagram',
+  'twitter',
+  'youtube',
+])
 
 export const pages_blocks_high_impact_hero_links = pgTable(
   'pages_blocks_high_impact_hero_links',
@@ -1059,6 +1066,8 @@ export const pages_blocks_archive = pgTable(
     relationTo: enum_pages_blocks_archive_relation_to('relation_to').default('events'),
     type: enum_pages_blocks_archive_type('type').default('state'),
     limit: numeric('limit').default('10'),
+    pagination: boolean('pagination').default(true),
+    itemsPerPage: numeric('items_per_page').default('3'),
     blockName: varchar('block_name'),
   },
   (columns) => ({
@@ -1113,7 +1122,7 @@ export const pages_blocks_media_block = pgTable(
       enum_pages_blocks_media_block_media_alignment('media_alignment').default('left'),
     content: jsonb('content'),
     autoPlay: boolean('auto_play').default(true),
-    looping: boolean('looping').default('true'),
+    looping: boolean('looping').default(true),
     blockName: varchar('block_name'),
   },
   (columns) => ({
@@ -1270,10 +1279,10 @@ export const pages_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
     newsPostsID: integer('news_posts_id'),
     newslettersID: integer('newsletters_id'),
     contactsID: integer('contacts_id'),
-    courtsID: integer('courts_id'),
     diocesesID: integer('dioceses_id'),
     mediaID: integer('media_id'),
   },
@@ -1286,10 +1295,10 @@ export const pages_rels = pgTable(
     pages_rels_events_id_idx: index('pages_rels_events_id_idx').on(columns.eventsID),
     pages_rels_fundraisers_id_idx: index('pages_rels_fundraisers_id_idx').on(columns.fundraisersID),
     pages_rels_projects_id_idx: index('pages_rels_projects_id_idx').on(columns.projectsID),
+    pages_rels_courts_id_idx: index('pages_rels_courts_id_idx').on(columns.courtsID),
     pages_rels_news_posts_id_idx: index('pages_rels_news_posts_id_idx').on(columns.newsPostsID),
     pages_rels_newsletters_id_idx: index('pages_rels_newsletters_id_idx').on(columns.newslettersID),
     pages_rels_contacts_id_idx: index('pages_rels_contacts_id_idx').on(columns.contactsID),
-    pages_rels_courts_id_idx: index('pages_rels_courts_id_idx').on(columns.courtsID),
     pages_rels_dioceses_id_idx: index('pages_rels_dioceses_id_idx').on(columns.diocesesID),
     pages_rels_media_id_idx: index('pages_rels_media_id_idx').on(columns.mediaID),
     parentFk: foreignKey({
@@ -1322,6 +1331,11 @@ export const pages_rels = pgTable(
       foreignColumns: [projects.id],
       name: 'pages_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'pages_rels_courts_fk',
+    }).onDelete('cascade'),
     newsPostsIdFk: foreignKey({
       columns: [columns['newsPostsID']],
       foreignColumns: [news_posts.id],
@@ -1336,11 +1350,6 @@ export const pages_rels = pgTable(
       columns: [columns['contactsID']],
       foreignColumns: [contacts.id],
       name: 'pages_rels_contacts_fk',
-    }).onDelete('cascade'),
-    courtsIdFk: foreignKey({
-      columns: [columns['courtsID']],
-      foreignColumns: [courts.id],
-      name: 'pages_rels_courts_fk',
     }).onDelete('cascade'),
     diocesesIdFk: foreignKey({
       columns: [columns['diocesesID']],
@@ -1991,6 +2000,8 @@ export const _pages_v_blocks_archive = pgTable(
     relationTo: enum__pages_v_blocks_archive_relation_to('relation_to').default('events'),
     type: enum__pages_v_blocks_archive_type('type').default('state'),
     limit: numeric('limit').default('10'),
+    pagination: boolean('pagination').default(true),
+    itemsPerPage: numeric('items_per_page').default('3'),
     _uuid: varchar('_uuid'),
     blockName: varchar('block_name'),
   },
@@ -2047,7 +2058,7 @@ export const _pages_v_blocks_media_block = pgTable(
       enum__pages_v_blocks_media_block_media_alignment('media_alignment').default('left'),
     content: jsonb('content'),
     autoPlay: boolean('auto_play').default(true),
-    looping: boolean('looping').default('true'),
+    looping: boolean('looping').default(true),
     _uuid: varchar('_uuid'),
     blockName: varchar('block_name'),
   },
@@ -2245,10 +2256,10 @@ export const _pages_v_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
     newsPostsID: integer('news_posts_id'),
     newslettersID: integer('newsletters_id'),
     contactsID: integer('contacts_id'),
-    courtsID: integer('courts_id'),
     diocesesID: integer('dioceses_id'),
     mediaID: integer('media_id'),
   },
@@ -2263,6 +2274,7 @@ export const _pages_v_rels = pgTable(
       columns.fundraisersID,
     ),
     _pages_v_rels_projects_id_idx: index('_pages_v_rels_projects_id_idx').on(columns.projectsID),
+    _pages_v_rels_courts_id_idx: index('_pages_v_rels_courts_id_idx').on(columns.courtsID),
     _pages_v_rels_news_posts_id_idx: index('_pages_v_rels_news_posts_id_idx').on(
       columns.newsPostsID,
     ),
@@ -2270,7 +2282,6 @@ export const _pages_v_rels = pgTable(
       columns.newslettersID,
     ),
     _pages_v_rels_contacts_id_idx: index('_pages_v_rels_contacts_id_idx').on(columns.contactsID),
-    _pages_v_rels_courts_id_idx: index('_pages_v_rels_courts_id_idx').on(columns.courtsID),
     _pages_v_rels_dioceses_id_idx: index('_pages_v_rels_dioceses_id_idx').on(columns.diocesesID),
     _pages_v_rels_media_id_idx: index('_pages_v_rels_media_id_idx').on(columns.mediaID),
     parentFk: foreignKey({
@@ -2303,6 +2314,11 @@ export const _pages_v_rels = pgTable(
       foreignColumns: [projects.id],
       name: '_pages_v_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: '_pages_v_rels_courts_fk',
+    }).onDelete('cascade'),
     newsPostsIdFk: foreignKey({
       columns: [columns['newsPostsID']],
       foreignColumns: [news_posts.id],
@@ -2317,11 +2333,6 @@ export const _pages_v_rels = pgTable(
       columns: [columns['contactsID']],
       foreignColumns: [contacts.id],
       name: '_pages_v_rels_contacts_fk',
-    }).onDelete('cascade'),
-    courtsIdFk: foreignKey({
-      columns: [columns['courtsID']],
-      foreignColumns: [courts.id],
-      name: '_pages_v_rels_courts_fk',
     }).onDelete('cascade'),
     diocesesIdFk: foreignKey({
       columns: [columns['diocesesID']],
@@ -2512,6 +2523,7 @@ export const news_posts_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
   },
   (columns) => ({
     order: index('news_posts_rels_order_idx').on(columns.order),
@@ -2528,6 +2540,7 @@ export const news_posts_rels = pgTable(
     news_posts_rels_projects_id_idx: index('news_posts_rels_projects_id_idx').on(
       columns.projectsID,
     ),
+    news_posts_rels_courts_id_idx: index('news_posts_rels_courts_id_idx').on(columns.courtsID),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [news_posts.id],
@@ -2557,6 +2570,11 @@ export const news_posts_rels = pgTable(
       columns: [columns['projectsID']],
       foreignColumns: [projects.id],
       name: 'news_posts_rels_projects_fk',
+    }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'news_posts_rels_courts_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -2719,6 +2737,7 @@ export const dioceses_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
     contactsID: integer('contacts_id'),
   },
   (columns) => ({
@@ -2732,6 +2751,7 @@ export const dioceses_rels = pgTable(
       columns.fundraisersID,
     ),
     dioceses_rels_projects_id_idx: index('dioceses_rels_projects_id_idx').on(columns.projectsID),
+    dioceses_rels_courts_id_idx: index('dioceses_rels_courts_id_idx').on(columns.courtsID),
     dioceses_rels_contacts_id_idx: index('dioceses_rels_contacts_id_idx').on(columns.contactsID),
     parentFk: foreignKey({
       columns: [columns['parent']],
@@ -2763,6 +2783,11 @@ export const dioceses_rels = pgTable(
       foreignColumns: [projects.id],
       name: 'dioceses_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'dioceses_rels_courts_fk',
+    }).onDelete('cascade'),
     contactsIdFk: foreignKey({
       columns: [columns['contactsID']],
       foreignColumns: [contacts.id],
@@ -2781,6 +2806,7 @@ export const courts = pgTable(
     }),
     number: numeric('number'),
     instituted: timestamp('instituted', { mode: 'string', withTimezone: true, precision: 3 }),
+    includeWebsite: boolean('include_website'),
     website_type: enum_courts_website_type('website_type').default('reference'),
     website_newTab: boolean('website_new_tab'),
     website_color: enum_courts_website_color('website_color').default('primary'),
@@ -2792,6 +2818,7 @@ export const courts = pgTable(
     location_state: varchar('location_state'),
     location_zipcode: varchar('location_zipcode'),
     phoneNumber: varchar('phone_number'),
+    contactEmail: varchar('contact_email'),
     officers_regent: integer('officers_regent_id').references(() => contacts.id, {
       onDelete: 'set null',
     }),
@@ -2867,6 +2894,7 @@ export const courts_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
     newslettersID: integer('newsletters_id'),
   },
   (columns) => ({
@@ -2880,6 +2908,7 @@ export const courts_rels = pgTable(
       columns.fundraisersID,
     ),
     courts_rels_projects_id_idx: index('courts_rels_projects_id_idx').on(columns.projectsID),
+    courts_rels_courts_id_idx: index('courts_rels_courts_id_idx').on(columns.courtsID),
     courts_rels_newsletters_id_idx: index('courts_rels_newsletters_id_idx').on(
       columns.newslettersID,
     ),
@@ -2913,6 +2942,11 @@ export const courts_rels = pgTable(
       foreignColumns: [projects.id],
       name: 'courts_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'courts_rels_courts_fk',
+    }).onDelete('cascade'),
     newslettersIdFk: foreignKey({
       columns: [columns['newslettersID']],
       foreignColumns: [newsletters.id],
@@ -2938,6 +2972,7 @@ export const _courts_v = pgTable(
       withTimezone: true,
       precision: 3,
     }),
+    version_includeWebsite: boolean('version_include_website'),
     version_website_type:
       enum__courts_v_version_website_type('version_website_type').default('reference'),
     version_website_newTab: boolean('version_website_new_tab'),
@@ -2953,6 +2988,7 @@ export const _courts_v = pgTable(
     version_location_state: varchar('version_location_state'),
     version_location_zipcode: varchar('version_location_zipcode'),
     version_phoneNumber: varchar('version_phone_number'),
+    version_contactEmail: varchar('version_contact_email'),
     version_officers_regent: integer('version_officers_regent_id').references(() => contacts.id, {
       onDelete: 'set null',
     }),
@@ -3065,6 +3101,7 @@ export const _courts_v_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
     newslettersID: integer('newsletters_id'),
   },
   (columns) => ({
@@ -3080,6 +3117,7 @@ export const _courts_v_rels = pgTable(
       columns.fundraisersID,
     ),
     _courts_v_rels_projects_id_idx: index('_courts_v_rels_projects_id_idx').on(columns.projectsID),
+    _courts_v_rels_courts_id_idx: index('_courts_v_rels_courts_id_idx').on(columns.courtsID),
     _courts_v_rels_newsletters_id_idx: index('_courts_v_rels_newsletters_id_idx').on(
       columns.newslettersID,
     ),
@@ -3113,6 +3151,11 @@ export const _courts_v_rels = pgTable(
       foreignColumns: [projects.id],
       name: '_courts_v_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: '_courts_v_rels_courts_fk',
+    }).onDelete('cascade'),
     newslettersIdFk: foreignKey({
       columns: [columns['newslettersID']],
       foreignColumns: [newsletters.id],
@@ -3144,9 +3187,6 @@ export const events = pgTable(
     associatedCourt: integer('associated_court_id').references(() => courts.id, {
       onDelete: 'set null',
     }),
-    heroImage: integer('hero_image_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
     content: jsonb('content'),
     meta_title: varchar('meta_title'),
     meta_image: integer('meta_image_id').references(() => media.id, {
@@ -3165,7 +3205,6 @@ export const events = pgTable(
   },
   (columns) => ({
     events_associated_court_idx: index('events_associated_court_idx').on(columns.associatedCourt),
-    events_hero_image_idx: index('events_hero_image_idx').on(columns.heroImage),
     events_meta_meta_image_idx: index('events_meta_meta_image_idx').on(columns.meta_image),
     events_slug_idx: index('events_slug_idx').on(columns.slug),
     events_updated_at_idx: index('events_updated_at_idx').on(columns.updatedAt),
@@ -3227,9 +3266,6 @@ export const _events_v = pgTable(
     version_associatedCourt: integer('version_associated_court_id').references(() => courts.id, {
       onDelete: 'set null',
     }),
-    version_heroImage: integer('version_hero_image_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
     version_content: jsonb('version_content'),
     version_meta_title: varchar('version_meta_title'),
     version_meta_image: integer('version_meta_image_id').references(() => media.id, {
@@ -3263,9 +3299,6 @@ export const _events_v = pgTable(
     _events_v_version_version_associated_court_idx: index(
       '_events_v_version_version_associated_court_idx',
     ).on(columns.version_associatedCourt),
-    _events_v_version_version_hero_image_idx: index('_events_v_version_version_hero_image_idx').on(
-      columns.version_heroImage,
-    ),
     _events_v_version_meta_version_meta_image_idx: index(
       '_events_v_version_meta_version_meta_image_idx',
     ).on(columns.version_meta_image),
@@ -3324,9 +3357,6 @@ export const fundraisers = pgTable(
     associatedCourt: integer('associated_court_id').references(() => courts.id, {
       onDelete: 'set null',
     }),
-    heroImage: integer('hero_image_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
     content: jsonb('content'),
     meta_title: varchar('meta_title'),
     meta_image: integer('meta_image_id').references(() => media.id, {
@@ -3347,7 +3377,6 @@ export const fundraisers = pgTable(
     fundraisers_associated_court_idx: index('fundraisers_associated_court_idx').on(
       columns.associatedCourt,
     ),
-    fundraisers_hero_image_idx: index('fundraisers_hero_image_idx').on(columns.heroImage),
     fundraisers_meta_meta_image_idx: index('fundraisers_meta_meta_image_idx').on(
       columns.meta_image,
     ),
@@ -3399,9 +3428,6 @@ export const _fundraisers_v = pgTable(
     version_associatedCourt: integer('version_associated_court_id').references(() => courts.id, {
       onDelete: 'set null',
     }),
-    version_heroImage: integer('version_hero_image_id').references(() => media.id, {
-      onDelete: 'set null',
-    }),
     version_content: jsonb('version_content'),
     version_meta_title: varchar('version_meta_title'),
     version_meta_image: integer('version_meta_image_id').references(() => media.id, {
@@ -3435,9 +3461,6 @@ export const _fundraisers_v = pgTable(
     _fundraisers_v_version_version_associated_court_idx: index(
       '_fundraisers_v_version_version_associated_court_idx',
     ).on(columns.version_associatedCourt),
-    _fundraisers_v_version_version_hero_image_idx: index(
-      '_fundraisers_v_version_version_hero_image_idx',
-    ).on(columns.version_heroImage),
     _fundraisers_v_version_meta_version_meta_image_idx: index(
       '_fundraisers_v_version_meta_version_meta_image_idx',
     ).on(columns.version_meta_image),
@@ -4680,6 +4703,7 @@ export const header_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
   },
   (columns) => ({
     order: index('header_rels_order_idx').on(columns.order),
@@ -4692,6 +4716,7 @@ export const header_rels = pgTable(
       columns.fundraisersID,
     ),
     header_rels_projects_id_idx: index('header_rels_projects_id_idx').on(columns.projectsID),
+    header_rels_courts_id_idx: index('header_rels_courts_id_idx').on(columns.courtsID),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [header.id],
@@ -4722,6 +4747,11 @@ export const header_rels = pgTable(
       foreignColumns: [projects.id],
       name: 'header_rels_projects_fk',
     }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'header_rels_courts_fk',
+    }).onDelete('cascade'),
   }),
 )
 
@@ -4748,13 +4778,38 @@ export const footer_nav_items = pgTable(
   }),
 )
 
+export const footer_social_media = pgTable(
+  'footer_social_media',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    platform: enum_footer_social_media_platform('platform').notNull(),
+    link: varchar('link').notNull(),
+  },
+  (columns) => ({
+    _orderIdx: index('footer_social_media_order_idx').on(columns._order),
+    _parentIDIdx: index('footer_social_media_parent_id_idx').on(columns._parentID),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [footer.id],
+      name: 'footer_social_media_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
 export const footer = pgTable(
   'footer',
   {
     id: serial('id').primaryKey(),
+    navHeading: varchar('nav_heading'),
     logo: integer('logo_id').references(() => media.id, {
       onDelete: 'set null',
     }),
+    richText: jsonb('rich_text'),
+    copyrightText: varchar('copyright_text')
+      .notNull()
+      .default('© Copyright 2025, All Rights Reserved'),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 }),
     createdAt: timestamp('created_at', { mode: 'string', withTimezone: true, precision: 3 }),
   },
@@ -4775,6 +4830,7 @@ export const footer_rels = pgTable(
     eventsID: integer('events_id'),
     fundraisersID: integer('fundraisers_id'),
     projectsID: integer('projects_id'),
+    courtsID: integer('courts_id'),
   },
   (columns) => ({
     order: index('footer_rels_order_idx').on(columns.order),
@@ -4787,6 +4843,7 @@ export const footer_rels = pgTable(
       columns.fundraisersID,
     ),
     footer_rels_projects_id_idx: index('footer_rels_projects_id_idx').on(columns.projectsID),
+    footer_rels_courts_id_idx: index('footer_rels_courts_id_idx').on(columns.courtsID),
     parentFk: foreignKey({
       columns: [columns['parent']],
       foreignColumns: [footer.id],
@@ -4816,6 +4873,11 @@ export const footer_rels = pgTable(
       columns: [columns['projectsID']],
       foreignColumns: [projects.id],
       name: 'footer_rels_projects_fk',
+    }).onDelete('cascade'),
+    courtsIdFk: foreignKey({
+      columns: [columns['courtsID']],
+      foreignColumns: [courts.id],
+      name: 'footer_rels_courts_fk',
     }).onDelete('cascade'),
   }),
 )
@@ -5204,6 +5266,11 @@ export const relations_pages_rels = relations(pages_rels, ({ one }) => ({
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [pages_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
   newsPostsID: one(news_posts, {
     fields: [pages_rels.newsPostsID],
     references: [news_posts.id],
@@ -5218,11 +5285,6 @@ export const relations_pages_rels = relations(pages_rels, ({ one }) => ({
     fields: [pages_rels.contactsID],
     references: [contacts.id],
     relationName: 'contacts',
-  }),
-  courtsID: one(courts, {
-    fields: [pages_rels.courtsID],
-    references: [courts.id],
-    relationName: 'courts',
   }),
   diocesesID: one(dioceses, {
     fields: [pages_rels.diocesesID],
@@ -5707,6 +5769,11 @@ export const relations__pages_v_rels = relations(_pages_v_rels, ({ one }) => ({
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [_pages_v_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
   newsPostsID: one(news_posts, {
     fields: [_pages_v_rels.newsPostsID],
     references: [news_posts.id],
@@ -5721,11 +5788,6 @@ export const relations__pages_v_rels = relations(_pages_v_rels, ({ one }) => ({
     fields: [_pages_v_rels.contactsID],
     references: [contacts.id],
     relationName: 'contacts',
-  }),
-  courtsID: one(courts, {
-    fields: [_pages_v_rels.courtsID],
-    references: [courts.id],
-    relationName: 'courts',
   }),
   diocesesID: one(dioceses, {
     fields: [_pages_v_rels.diocesesID],
@@ -5850,6 +5912,11 @@ export const relations_news_posts_rels = relations(news_posts_rels, ({ one }) =>
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [news_posts_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
 }))
 export const relations_news_posts = relations(news_posts, ({ many }) => ({
   links: many(news_posts_links, {
@@ -5934,6 +6001,11 @@ export const relations_dioceses_rels = relations(dioceses_rels, ({ one }) => ({
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [dioceses_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
   contactsID: one(contacts, {
     fields: [dioceses_rels.contactsID],
     references: [contacts.id],
@@ -5975,6 +6047,11 @@ export const relations_courts_rels = relations(courts_rels, ({ one }) => ({
     fields: [courts_rels.projectsID],
     references: [projects.id],
     relationName: 'projects',
+  }),
+  courtsID: one(courts, {
+    fields: [courts_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
   }),
   newslettersID: one(newsletters, {
     fields: [courts_rels.newslettersID],
@@ -6053,6 +6130,11 @@ export const relations__courts_v_rels = relations(_courts_v_rels, ({ one }) => (
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [_courts_v_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
   newslettersID: one(newsletters, {
     fields: [_courts_v_rels.newslettersID],
     references: [newsletters.id],
@@ -6122,11 +6204,6 @@ export const relations_events = relations(events, ({ one, many }) => ({
     references: [courts.id],
     relationName: 'associatedCourt',
   }),
-  heroImage: one(media, {
-    fields: [events.heroImage],
-    references: [media.id],
-    relationName: 'heroImage',
-  }),
   meta_image: one(media, {
     fields: [events.meta_image],
     references: [media.id],
@@ -6159,11 +6236,6 @@ export const relations__events_v = relations(_events_v, ({ one, many }) => ({
     references: [courts.id],
     relationName: 'version_associatedCourt',
   }),
-  version_heroImage: one(media, {
-    fields: [_events_v.version_heroImage],
-    references: [media.id],
-    relationName: 'version_heroImage',
-  }),
   version_meta_image: one(media, {
     fields: [_events_v.version_meta_image],
     references: [media.id],
@@ -6190,11 +6262,6 @@ export const relations_fundraisers = relations(fundraisers, ({ one, many }) => (
     fields: [fundraisers.associatedCourt],
     references: [courts.id],
     relationName: 'associatedCourt',
-  }),
-  heroImage: one(media, {
-    fields: [fundraisers.heroImage],
-    references: [media.id],
-    relationName: 'heroImage',
   }),
   meta_image: one(media, {
     fields: [fundraisers.meta_image],
@@ -6227,11 +6294,6 @@ export const relations__fundraisers_v = relations(_fundraisers_v, ({ one, many }
     fields: [_fundraisers_v.version_associatedCourt],
     references: [courts.id],
     relationName: 'version_associatedCourt',
-  }),
-  version_heroImage: one(media, {
-    fields: [_fundraisers_v.version_heroImage],
-    references: [media.id],
-    relationName: 'version_heroImage',
   }),
   version_meta_image: one(media, {
     fields: [_fundraisers_v.version_meta_image],
@@ -6724,6 +6786,11 @@ export const relations_header_rels = relations(header_rels, ({ one }) => ({
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [header_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
 }))
 export const relations_header = relations(header, ({ one, many }) => ({
   navItems: many(header_nav_items, {
@@ -6746,6 +6813,13 @@ export const relations_footer_nav_items = relations(footer_nav_items, ({ one }) 
     fields: [footer_nav_items._parentID],
     references: [footer.id],
     relationName: 'navItems',
+  }),
+}))
+export const relations_footer_social_media = relations(footer_social_media, ({ one }) => ({
+  _parentID: one(footer, {
+    fields: [footer_social_media._parentID],
+    references: [footer.id],
+    relationName: 'socialMedia',
   }),
 }))
 export const relations_footer_rels = relations(footer_rels, ({ one }) => ({
@@ -6779,6 +6853,11 @@ export const relations_footer_rels = relations(footer_rels, ({ one }) => ({
     references: [projects.id],
     relationName: 'projects',
   }),
+  courtsID: one(courts, {
+    fields: [footer_rels.courtsID],
+    references: [courts.id],
+    relationName: 'courts',
+  }),
 }))
 export const relations_footer = relations(footer, ({ one, many }) => ({
   navItems: many(footer_nav_items, {
@@ -6788,6 +6867,9 @@ export const relations_footer = relations(footer, ({ one, many }) => ({
     fields: [footer.logo],
     references: [media.id],
     relationName: 'logo',
+  }),
+  socialMedia: many(footer_social_media, {
+    relationName: 'socialMedia',
   }),
   _rels: many(footer_rels, {
     relationName: '_rels',
@@ -6911,6 +6993,7 @@ type DatabaseSchema = {
   enum_header_nav_buttons_link_appearance: typeof enum_header_nav_buttons_link_appearance
   enum_footer_nav_items_link_type: typeof enum_footer_nav_items_link_type
   enum_footer_nav_items_link_color: typeof enum_footer_nav_items_link_color
+  enum_footer_social_media_platform: typeof enum_footer_social_media_platform
   pages_blocks_high_impact_hero_links: typeof pages_blocks_high_impact_hero_links
   pages_blocks_high_impact_hero: typeof pages_blocks_high_impact_hero
   pages_blocks_low_impact_hero: typeof pages_blocks_low_impact_hero
@@ -7040,6 +7123,7 @@ type DatabaseSchema = {
   header: typeof header
   header_rels: typeof header_rels
   footer_nav_items: typeof footer_nav_items
+  footer_social_media: typeof footer_social_media
   footer: typeof footer
   footer_rels: typeof footer_rels
   relations_pages_blocks_high_impact_hero_links: typeof relations_pages_blocks_high_impact_hero_links
@@ -7171,6 +7255,7 @@ type DatabaseSchema = {
   relations_header_rels: typeof relations_header_rels
   relations_header: typeof relations_header
   relations_footer_nav_items: typeof relations_footer_nav_items
+  relations_footer_social_media: typeof relations_footer_social_media
   relations_footer_rels: typeof relations_footer_rels
   relations_footer: typeof relations_footer
 }
