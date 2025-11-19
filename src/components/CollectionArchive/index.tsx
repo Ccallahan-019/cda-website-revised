@@ -36,8 +36,8 @@ const ArchiveGrid: React.FC<{
   return (
     <Grid
       columns={{ initial: '4', sm: '8', lg: '12' }}
-      gapX={{ initial: '3', lg: '6', xl: '9' }}
-      gapY={{ initial: '3', lg: '6' }}
+      gapX={{ initial: '2', lg: '4', xl: '8' }}
+      gapY={{ initial: '2', lg: '4' }}
     >
       {docs.map((result, index) => {
         if ('relationTo' in result) {
