@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic'
+
 import { notFound } from 'next/navigation'
 import { getApolloServerClient } from '@/graphql/apolloClient'
 import { GET_PAGE_BY_SLUG } from '@/graphql/queries/pages/page'
