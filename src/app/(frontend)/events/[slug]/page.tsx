@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+const SKIP_BUILD_STATIC_GENERATION = process.env.SKIP_BUILD_STATIC_GENERATION === 'true'
 
 import { notFound } from 'next/navigation'
 import { getApolloServerClient } from '@/graphql/apolloClient'
@@ -19,6 +19,9 @@ import { formatDateTime } from '@/utilities/formatDateTime'
 import { Text } from '@/components/UI/RadixComponents/Typography/Text'
 import { Event } from '@/payload-types'
 
+export const revalidate = 3600
+export const dynamicParams = true
+
 type Args = {
   params: Promise<{
     slug?: string
@@ -26,6 +29,11 @@ type Args = {
 }
 
 export async function generateStaticParams() {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Don't pre-generate any paths while backend isn't available
+    return []
+  }
+
   const client = getApolloServerClient()
   const events = await client.query({
     query: GET_EVENT_SLUGS,
@@ -39,6 +47,10 @@ export async function generateStaticParams() {
 }
 
 const queryEventBySlug = async ({ slug }: { slug: string }) => {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    return null
+  }
+
   const { isEnabled: draft } = await draftMode()
   const cookieStore = await cookies()
   const token = draft ? cookieStore.get('payload-token')?.value : undefined
@@ -56,6 +68,13 @@ const queryEventBySlug = async ({ slug }: { slug: string }) => {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug } = await paramsPromise
 
+  if (SKIP_BUILD_STATIC_GENERATION || !slug) {
+    return {
+      title: 'PA Catholic Daughters',
+      description: 'Learn about the Pennsylvania Catholic Daughters State Court',
+    }
+  }
+
   let event
 
   if (slug) {
@@ -70,6 +89,11 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 export default async function EventTemplate({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug } = await paramsPromise
+
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Temporarily hide the route completely
+    return notFound()
+  }
 
   let event: Event | null = null
 

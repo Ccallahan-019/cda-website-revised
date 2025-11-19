@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+const SKIP_BUILD_STATIC_GENERATION = process.env.SKIP_BUILD_STATIC_GENERATION === 'true'
 
 import { notFound } from 'next/navigation'
 import { getApolloServerClient } from '@/graphql/apolloClient'
@@ -27,6 +27,11 @@ type Args = {
 }
 
 export async function generateStaticParams() {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Don't pre-generate any paths while backend isn't available
+    return []
+  }
+
   const client = getApolloServerClient()
   const projects = await client.query({
     query: GET_PROJECT_SLUGS,
@@ -39,7 +44,11 @@ export async function generateStaticParams() {
   return params
 }
 
-const queryFundraiserBySlug = async ({ slug }: { slug: string }) => {
+const queryProjectBySlug = async ({ slug }: { slug: string }) => {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    return null
+  }
+
   const { isEnabled: draft } = await draftMode()
   const cookieStore = await cookies()
   const token = draft ? cookieStore.get('payload-token')?.value : undefined
@@ -57,10 +66,17 @@ const queryFundraiserBySlug = async ({ slug }: { slug: string }) => {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug } = await paramsPromise
 
+  if (SKIP_BUILD_STATIC_GENERATION || !slug) {
+    return {
+      title: 'PA Catholic Daughters',
+      description: 'Learn about the Pennsylvania Catholic Daughters State Court',
+    }
+  }
+
   let project
 
   if (slug) {
-    project = await queryFundraiserBySlug({
+    project = await queryProjectBySlug({
       slug,
     })
   }
@@ -72,10 +88,15 @@ export default async function ProjectTemplate({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug } = await paramsPromise
 
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Temporarily hide the route completely
+    return notFound()
+  }
+
   let project: Project | null = null
 
   if (slug) {
-    project = await queryFundraiserBySlug({
+    project = await queryProjectBySlug({
       slug,
     })
   }

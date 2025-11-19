@@ -1,4 +1,4 @@
-export const dynamic = 'force-dynamic'
+const SKIP_BUILD_STATIC_GENERATION = process.env.SKIP_BUILD_STATIC_GENERATION === 'true'
 
 import { notFound } from 'next/navigation'
 import { getApolloServerClient } from '@/graphql/apolloClient'
@@ -17,6 +17,9 @@ import { GET_FUNDRAISER_BY_SLUG, GET_FUNDRAISER_SLUGS } from '@/graphql/queries/
 import { FundraiserHero } from '@/heros/FundraiserHero'
 import { Fundraiser } from '@/payload-types'
 
+export const revalidate = 3600
+export const dynamicParams = true
+
 type Args = {
   params: Promise<{
     slug?: string
@@ -24,6 +27,11 @@ type Args = {
 }
 
 export async function generateStaticParams() {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Don't pre-generate any paths while backend isn't available
+    return []
+  }
+
   const client = getApolloServerClient()
   const fundraisers = await client.query({
     query: GET_FUNDRAISER_SLUGS,
@@ -37,6 +45,10 @@ export async function generateStaticParams() {
 }
 
 const queryFundraiserBySlug = async ({ slug }: { slug: string }) => {
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    return null
+  }
+
   const { isEnabled: draft } = await draftMode()
   const cookieStore = await cookies()
   const token = draft ? cookieStore.get('payload-token')?.value : undefined
@@ -54,6 +66,13 @@ const queryFundraiserBySlug = async ({ slug }: { slug: string }) => {
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug } = await paramsPromise
 
+  if (SKIP_BUILD_STATIC_GENERATION || !slug) {
+    return {
+      title: 'PA Catholic Daughters',
+      description: 'Learn about the Pennsylvania Catholic Daughters State Court',
+    }
+  }
+
   let fundraiser
 
   if (slug) {
@@ -68,6 +87,11 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 export default async function FundraiserTemplate({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
   const { slug } = await paramsPromise
+
+  if (SKIP_BUILD_STATIC_GENERATION) {
+    // Temporarily hide the route completely
+    return notFound()
+  }
 
   let fundraiser: Fundraiser | null = null
 
