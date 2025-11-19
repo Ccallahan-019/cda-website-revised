@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+/* radix modifications */
+.radix-themes {
+  --container-1: 520px;
+  --container-2: 768px;
+  --container-3: 1024px;
+  --container-4: 1280px;
+
+  --default-font-family: var(--font-merriweather);
+
+  --em-font-size-adjust: 1;
+  --font-size-1: calc(14px * var(--scaling));
+  --font-size-2: calc(16px * var(--scaling));
+  --font-size-3: calc(17px * var(--scaling));
+  --font-size-4: calc(18px * var(--scaling));
+  --font-size-5: calc(20px * var(--scaling));
+  --font-size-6: calc(24px * var(--scaling));
+  --font-size-7: calc(28px * var(--scaling));
+  --font-size-8: calc(36px * var(--scaling));
+  --font-size-9: calc(48px * var(--scaling));
+
+  --letter-spacing-1: 0.0175em;
+  --letter-spacing-2: 0.015em;
+  --letter-spacing-3: 0.0125em;
+  --letter-spacing-4: 0.0125em;
+  --letter-spacing-5: 0.01em;
+  --letter-spacing-6: 0.0075em;
+  --letter-spacing-7: 0.005em;
+  --letter-spacing-8: 0.0025em;
+  --letter-spacing-9: 0.0025em;
+
+  --default-letter-spacing: 0.01em;
+  --heading-letter-spacing: 0.02em;
+  --strong-letter-spacing: 0.01em;
+  --em-letter-spacing: 0.0025em;
+  --quote-letter-spacing: 0.0025em;
+
+  letter-spacing: var(--default-letter-spacing);
+
+  --font-weight-light: 400;
+  --font-weight-regular: 500;
+  --font-weight-medium: 600;
+  --font-weight-bold: 700;
+}
+
+:where(.radix-themes) {
+  --color-panel-solid: var(--accent-2);
+}
+
+:is(.dark, .dark-theme),
+:is(.dark, .dark-theme) :where(.radix-themes:not(.light, .light-theme)) {
+  --color-panel-solid: var(--gray-3);
+}
+
+.rt-CalloutRoot {
+  align-items: center;
+}
+
+.rt-Card:where(.rt-variant-surface) {
+  --card-background-color: var(--accent-2);
+}
+
+.rt-Button:where(:not(.rt-variant-ghost)) {
+  font-weight: var(--font-weight-regular);
+}
+
+/* rich text spacing */
+.richtext-child:not(:last-child) {
+  margin-bottom: var(--space-4);
+}
+.richtext-child:not(:first-child) {
+  margin-top: var(--space-4);
+}
+.richtext-block:not(:last-child) {
+  margin-bottom: var(--space-6);
+}
+.richtext-block:not(:first-child) {
+  margin-top: var(--space-6);
+}
+
+/* react-date-picker modifications */
+.rdp-root {
+  --rdp-accent-color: var(--accent-8);
+  --rdp-day_button-border-radius: var(--radius-3);
+}
+
+body {
+  overflow-x: hidden;
+}

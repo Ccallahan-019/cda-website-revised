@@ -1,0 +1,166 @@
+import type { Field, GroupField } from 'payload'
+
+import deepMerge from '@/utilities/deepMerge'
+
+export type LinkAppearances = 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive'
+
+export const appearanceOptions: Record<LinkAppearances, { label: string; value: string }> = {
+  default: {
+    label: 'Default',
+    value: 'default',
+  },
+  solid: {
+    label: 'Solid',
+    value: 'solid',
+  },
+  soft: {
+    label: 'Soft',
+    value: 'soft',
+  },
+  outline: {
+    label: 'Outline',
+    value: 'outline',
+  },
+  ghost: {
+    label: 'Ghost',
+    value: 'ghost',
+  },
+  destructive: {
+    label: 'Destructive',
+    value: 'destructive',
+  },
+}
+
+type LinkType = (options?: {
+  appearances?: LinkAppearances[] | false
+  disableLabel?: boolean
+  overrides?: Partial<GroupField>
+}) => Field
+
+export const link: LinkType = ({ appearances, disableLabel = false, overrides = {} } = {}) => {
+  const linkResult: GroupField = {
+    name: 'link',
+    type: 'group',
+    admin: {
+      hideGutter: true,
+    },
+    fields: [
+      {
+        type: 'row',
+        fields: [
+          {
+            name: 'type',
+            type: 'radio',
+            admin: {
+              layout: 'horizontal',
+              width: '50%',
+            },
+            defaultValue: 'reference',
+            options: [
+              {
+                label: 'Internal link',
+                value: 'reference',
+              },
+              {
+                label: 'Custom URL',
+                value: 'custom',
+              },
+            ],
+          },
+          {
+            name: 'newTab',
+            type: 'checkbox',
+            admin: {
+              style: {
+                alignSelf: 'flex-end',
+              },
+              width: '50%',
+            },
+            label: 'Open in new tab',
+          },
+        ],
+      },
+      {
+        name: 'color',
+        type: 'select',
+        required: true,
+        options: [
+          { label: 'Primary', value: 'primary' },
+          { label: 'Secondary', value: 'secondary' },
+        ],
+        defaultValue: 'primary',
+      },
+    ],
+  }
+
+  const linkTypes: Field[] = [
+    {
+      name: 'reference',
+      type: 'relationship',
+      admin: {
+        condition: (_, siblingData) => siblingData?.type === 'reference',
+      },
+      label: 'Document to link to',
+      relationTo: ['pages', 'charities', 'events', 'fundraisers', 'projects', 'courts'],
+      required: true,
+    },
+    {
+      name: 'url',
+      type: 'text',
+      admin: {
+        condition: (_, siblingData) => siblingData?.type === 'custom',
+        description: 'This must be the full website URL (i.e. https://www.some-website.com)',
+      },
+      label: 'Custom URL',
+      required: true,
+    },
+  ]
+
+  if (!disableLabel) {
+    linkTypes.map((linkType) => ({
+      ...linkType,
+      admin: {
+        ...linkType.admin,
+        width: '50%',
+      },
+    }))
+
+    linkResult.fields.push({
+      type: 'row',
+      fields: [
+        ...linkTypes,
+        {
+          name: 'label',
+          type: 'text',
+          admin: {
+            width: '50%',
+          },
+          label: 'Label',
+          required: true,
+        },
+      ],
+    })
+  } else {
+    linkResult.fields = [...linkResult.fields, ...linkTypes]
+  }
+
+  if (appearances !== false) {
+    let appearanceOptionsToUse = [appearanceOptions.default, appearanceOptions.outline]
+
+    if (appearances) {
+      appearanceOptionsToUse = appearances.map((appearance) => appearanceOptions[appearance])
+    }
+
+    linkResult.fields.push({
+      name: 'appearance',
+      type: 'select',
+      admin: {
+        description: 'Choose how the link should be rendered.',
+      },
+      defaultValue: 'default',
+      options: appearanceOptionsToUse,
+    })
+  }
+
+  return deepMerge(linkResult, overrides)
+}

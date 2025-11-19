@@ -1,0 +1,91 @@
+import type { CollectionConfig } from 'payload'
+
+import path from 'path'
+import { fileURLToPath } from 'url'
+
+import { anyone } from '../access/anyone'
+import { authenticated } from '../access/authenticated'
+
+const filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(filename)
+
+export const Newsletters: CollectionConfig = {
+  slug: 'newsletters',
+  access: {
+    create: authenticated,
+    delete: authenticated,
+    read: anyone,
+    update: authenticated,
+  },
+  admin: {
+    useAsTitle: 'displayTitle',
+  },
+  fields: [
+    {
+      name: 'title',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'yearOfRelease',
+      type: 'number',
+      required: true,
+    },
+    {
+      name: 'type',
+      type: 'radio',
+      required: true,
+      defaultValue: 'state',
+      options: [
+        {
+          label: 'Local',
+          value: 'local',
+        },
+        {
+          label: 'State',
+          value: 'state',
+        },
+        {
+          label: 'National',
+          value: 'national',
+        },
+      ],
+      admin: {
+        layout: 'horizontal',
+      },
+    },
+    {
+      name: 'associatedCourt',
+      type: 'relationship',
+      relationTo: 'courts',
+      admin: {
+        condition: (_, siblingData) => siblingData.type === 'local',
+      },
+    },
+    {
+      name: 'reissueDate',
+      type: 'date',
+      required: false,
+      admin: {
+        date: {
+          pickerAppearance: 'dayOnly',
+        },
+      },
+    },
+    {
+      name: 'displayTitle',
+      type: 'text',
+      admin: {
+        hidden: true,
+      },
+      hooks: {
+        beforeChange: [({ data }) => `${data?.title} (${data?.yearOfRelease})`],
+      },
+    },
+  ],
+  upload: {
+    // Upload to the public/media directory in Next.js making them publicly accessible even outside of Payload
+    staticDir: path.resolve(dirname, '../../public/newsletters'),
+    mimeTypes: ['application/pdf'],
+  },
+}

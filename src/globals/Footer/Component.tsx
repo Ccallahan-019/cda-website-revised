@@ -1,0 +1,79 @@
+import { getCachedGlobal } from '@/utilities/getGlobals'
+import React from 'react'
+
+import type { Footer } from '@/payload-types'
+
+import { CMSLink } from '@/components/Link'
+import { Logo } from '@/components/Logo/Logo'
+import { Flex } from '@radix-ui/themes'
+import { Link } from '@/components/UI/RadixComponents/Typography/Link'
+import { Container } from '@/components/UI/RadixComponents/Layout/Container'
+import { Text } from '@/components/UI/RadixComponents/Typography/Text'
+import RichText from '@/components/RichText'
+import { Heading } from '@/components/UI/RadixComponents/Typography/Heading'
+import { SocialMediaIcon } from '@/components/UI/SocialMediaIcon'
+
+export async function Footer() {
+  const footerData: Footer = await getCachedGlobal('footer', 1)()
+
+  const navHeading = footerData?.navHeading
+  const navItems = footerData?.navItems || []
+  const logo = footerData?.logo
+  const copyright = footerData?.copyrightText
+  const text = footerData?.richText
+  const socialMedia = footerData?.socialMedia || []
+
+  return (
+    <Container asChild style={{ boxShadow: 'var(--shadow-4)' }}>
+      <footer>
+        <Flex direction="column" align="center" gap="4" py="4">
+          <Flex
+            gap="5"
+            direction={{ initial: 'column', md: 'row' }}
+            justify={{ md: 'between' }}
+            align={{ initial: 'start', md: 'center' }}
+            width="100%"
+          >
+            <Flex direction="column" gap="5">
+              <Link href="/">
+                <Flex align="center">
+                  {logo && typeof logo === 'object' && (
+                    <Logo imageClassName="h-[4rem] w-full" {...logo} />
+                  )}
+                </Flex>
+              </Link>
+              {text && <RichText data={text} />}
+              {Array.isArray(socialMedia) && socialMedia.length > 0 && (
+                <Flex gap="4">
+                  {socialMedia.map((media, index) => (
+                    <SocialMediaIcon key={media.id || index} {...media} />
+                  ))}
+                </Flex>
+              )}
+            </Flex>
+            <Flex direction="column" gap="2" align={{ md: 'end' }}>
+              {navHeading && (
+                <Heading
+                  as="h6"
+                  weight="regular"
+                  color="gray"
+                  style={{ textTransform: 'uppercase' }}
+                >
+                  {navHeading}
+                </Heading>
+              )}
+              <Flex asChild direction="column" gap="2" align={{ md: 'end' }} pr={{ md: '1' }}>
+                <nav>
+                  {navItems.map(({ link }, i) => {
+                    return <CMSLink key={i} {...link} />
+                  })}
+                </nav>
+              </Flex>
+            </Flex>
+          </Flex>
+          {copyright && <Text>{copyright}</Text>}
+        </Flex>
+      </footer>
+    </Container>
+  )
+}

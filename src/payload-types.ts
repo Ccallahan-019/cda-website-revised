@@ -6,23 +6,133 @@
  * and re-run `payload generate:types` to regenerate this file.
  */
 
+/**
+ * Supported timezones in IANA format.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "supportedTimezones".
+ */
+export type SupportedTimezones =
+  | 'Pacific/Midway'
+  | 'Pacific/Niue'
+  | 'Pacific/Honolulu'
+  | 'Pacific/Rarotonga'
+  | 'America/Anchorage'
+  | 'Pacific/Gambier'
+  | 'America/Los_Angeles'
+  | 'America/Tijuana'
+  | 'America/Denver'
+  | 'America/Phoenix'
+  | 'America/Chicago'
+  | 'America/Guatemala'
+  | 'America/New_York'
+  | 'America/Bogota'
+  | 'America/Caracas'
+  | 'America/Santiago'
+  | 'America/Buenos_Aires'
+  | 'America/Sao_Paulo'
+  | 'Atlantic/South_Georgia'
+  | 'Atlantic/Azores'
+  | 'Atlantic/Cape_Verde'
+  | 'Europe/London'
+  | 'Europe/Berlin'
+  | 'Africa/Lagos'
+  | 'Europe/Athens'
+  | 'Africa/Cairo'
+  | 'Europe/Moscow'
+  | 'Asia/Riyadh'
+  | 'Asia/Dubai'
+  | 'Asia/Baku'
+  | 'Asia/Karachi'
+  | 'Asia/Tashkent'
+  | 'Asia/Calcutta'
+  | 'Asia/Dhaka'
+  | 'Asia/Almaty'
+  | 'Asia/Jakarta'
+  | 'Asia/Bangkok'
+  | 'Asia/Shanghai'
+  | 'Asia/Singapore'
+  | 'Asia/Tokyo'
+  | 'Asia/Seoul'
+  | 'Australia/Brisbane'
+  | 'Australia/Sydney'
+  | 'Pacific/Guam'
+  | 'Pacific/Noumea'
+  | 'Pacific/Auckland'
+  | 'Pacific/Fiji';
+
 export interface Config {
   auth: {
     users: UserAuthOperations;
   };
+  blocks: {};
   collections: {
-    users: User;
+    pages: Page;
     media: Media;
+    users: User;
+    newsPosts: NewsPost;
+    newsletters: Newsletter;
+    contacts: Contact;
+    dioceses: Diocese;
+    courts: Court;
+    events: Event;
+    fundraisers: Fundraiser;
+    projects: Project;
+    charities: Charity;
+    redirects: Redirect;
+    forms: Form;
+    'form-submissions': FormSubmission;
+    'payload-jobs': PayloadJob;
+    'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
   };
-  db: {
-    defaultIDType: string;
+  collectionsJoins: {};
+  collectionsSelect: {
+    pages: PagesSelect<false> | PagesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
+    newsPosts: NewsPostsSelect<false> | NewsPostsSelect<true>;
+    newsletters: NewslettersSelect<false> | NewslettersSelect<true>;
+    contacts: ContactsSelect<false> | ContactsSelect<true>;
+    dioceses: DiocesesSelect<false> | DiocesesSelect<true>;
+    courts: CourtsSelect<false> | CourtsSelect<true>;
+    events: EventsSelect<false> | EventsSelect<true>;
+    fundraisers: FundraisersSelect<false> | FundraisersSelect<true>;
+    projects: ProjectsSelect<false> | ProjectsSelect<true>;
+    charities: CharitiesSelect<false> | CharitiesSelect<true>;
+    redirects: RedirectsSelect<false> | RedirectsSelect<true>;
+    forms: FormsSelect<false> | FormsSelect<true>;
+    'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
+    'payload-jobs': PayloadJobsSelect<false> | PayloadJobsSelect<true>;
+    'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
+    'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
+    'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
-  globals: {};
+  db: {
+    defaultIDType: number;
+  };
+  globals: {
+    header: Header;
+    footer: Footer;
+  };
+  globalsSelect: {
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+  };
   locale: null;
   user: User & {
     collection: 'users';
+  };
+  jobs: {
+    tasks: {
+      schedulePublish: TaskSchedulePublish;
+      inline: {
+        input: unknown;
+        output: unknown;
+      };
+    };
+    workflows: unknown;
   };
 }
 export interface UserAuthOperations {
@@ -45,28 +155,577 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "users".
+ * via the `definition` "pages".
  */
-export interface User {
-  id: string;
+export interface Page {
+  id: number;
+  title: string;
+  hero?: (HighImpactHero | LowImpactHero | MediaRightHero)[] | null;
+  layout: (
+    | ContentBlock
+    | NewsPostsBlock
+    | NewslettersBlock
+    | SliderBlock
+    | StatsBlock
+    | SideBarBlock
+    | CalendarBlock
+    | TabsBlock
+    | ContactCardsBlock
+    | CourtListingBlock
+    | DioceseListingBlock
+    | ArchiveBlock
+    | MediaBlock
+    | BannerBlock
+    | CallToActionBlock
+    | FormBlock
+  )[];
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
   updatedAt: string;
   createdAt: string;
-  email: string;
-  resetPasswordToken?: string | null;
-  resetPasswordExpiration?: string | null;
-  salt?: string | null;
-  hash?: string | null;
-  loginAttempts?: number | null;
-  lockUntil?: string | null;
-  password?: string | null;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HighImpactHero".
+ */
+export interface HighImpactHero {
+  logo?: (number | null) | Media;
+  media: number | Media;
+  heading: string;
+  subHeading?: string | null;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline' | 'solid') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'highImpactHero';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
-  alt: string;
+  id: number;
+  alt?: string | null;
+  caption?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    square?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    small?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    medium?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    large?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    xlarge?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    og?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "charities".
+ */
+export interface Charity {
+  id: number;
+  name: string;
+  type: 'national' | 'state' | 'local';
+  associatedCourt?: (number | null) | Court;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedCharities?: (number | Charity)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courts".
+ */
+export interface Court {
+  id: number;
+  name: string;
+  diocese: number | Diocese;
+  number: number;
+  instituted: string;
+  includeWebsite?: boolean | null;
+  website?: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    color: 'primary' | 'secondary';
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'charities';
+          value: number | Charity;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'fundraisers';
+          value: number | Fundraiser;
+        } | null)
+      | ({
+          relationTo: 'projects';
+          value: number | Project;
+        } | null)
+      | ({
+          relationTo: 'courts';
+          value: number | Court;
+        } | null);
+    /**
+     * This must be the full website URL (i.e. https://www.some-website.com)
+     */
+    url?: string | null;
+    label: string;
+    /**
+     * Choose how the link should be rendered.
+     */
+    appearance?: ('default' | 'outline') | null;
+  };
+  location?: {
+    address?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zipcode?: string | null;
+  };
+  phoneNumber?: string | null;
+  contactEmail?: string | null;
+  /**
+   * These fields have been pre-filtered to only include contacts whose 'type' is 'local'.
+   */
+  officers?: {
+    regent?: (number | null) | Contact;
+    viceRegent?: (number | null) | Contact;
+    recordingSecretary?: (number | null) | Contact;
+    financialSecretary?: (number | null) | Contact;
+    treasurer?: (number | null) | Contact;
+  };
+  /**
+   * As long as this court has been saved, this field has been pre-filtered to only include newsletters that have been associated with this court.
+   */
+  newsletters?: (number | Newsletter)[] | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  publishedAt?: string | null;
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dioceses".
+ */
+export interface Diocese {
+  id: number;
+  name?: string | null;
+  website: {
+    type?: ('reference' | 'custom') | null;
+    newTab?: boolean | null;
+    color: 'primary' | 'secondary';
+    reference?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'charities';
+          value: number | Charity;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'fundraisers';
+          value: number | Fundraiser;
+        } | null)
+      | ({
+          relationTo: 'projects';
+          value: number | Project;
+        } | null)
+      | ({
+          relationTo: 'courts';
+          value: number | Court;
+        } | null);
+    /**
+     * This must be the full website URL (i.e. https://www.some-website.com)
+     */
+    url?: string | null;
+  };
+  location?: {
+    address?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zipcode?: string | null;
+  };
+  phoneNumber?: string | null;
+  /**
+   * This field has been pre-filtered to only show contacts that have designated as a District Deputy in the "Positions" field.
+   */
+  deputies?: (number | Contact)[] | null;
+  info?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events".
+ */
+export interface Event {
+  id: number;
+  name: string;
+  dates?: {
+    startDate?: string | null;
+    endDate?: string | null;
+  };
+  location?: {
+    address?: string | null;
+    city?: string | null;
+    state?: string | null;
+    zipcode?: string | null;
+  };
+  type: 'national' | 'state' | 'local';
+  associatedCourt?: (number | null) | Court;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedEvents?: (number | Event)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fundraisers".
+ */
+export interface Fundraiser {
+  id: number;
+  name: string;
+  type: 'national' | 'state' | 'local';
+  associatedCourt?: (number | null) | Court;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedFundraisers?: (number | Fundraiser)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: number;
+  name: string;
+  type: 'national' | 'state' | 'local';
+  associatedCourt?: (number | null) | Court;
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  relatedProjects?: (number | Project)[] | null;
+  meta?: {
+    title?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+    description?: string | null;
+  };
+  slug?: string | null;
+  slugLock?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts".
+ */
+export interface Contact {
+  id: number;
+  name: string;
+  email?: string | null;
+  image?: (number | null) | Media;
+  roles: {
+    role?: string | null;
+    id?: string | null;
+  }[];
+  positions: ('officer' | 'chairman' | 'deputy')[];
+  officerType?: ('national' | 'state' | 'local')[] | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletters".
+ */
+export interface Newsletter {
+  id: number;
+  title: string;
+  yearOfRelease: number;
+  type: 'local' | 'state' | 'national';
+  associatedCourt?: (number | null) | Court;
+  reissueDate?: string | null;
+  displayTitle?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -81,13 +740,1227 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LowImpactHero".
+ */
+export interface LowImpactHero {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'lowImpactHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaRightHero".
+ */
+export interface MediaRightHero {
+  media: number | Media;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  buttonType: 'scroll' | 'links';
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline' | 'solid') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaRightHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock".
+ */
+export interface ContentBlock {
+  columns?:
+    | {
+        size?: ('oneThird' | 'half' | 'twoThirds' | 'full') | null;
+        richText?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        enableLink?: boolean | null;
+        link?: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'content';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsPostsBlock".
+ */
+export interface NewsPostsBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  selectionType: 'auto' | 'custom';
+  limit?: number | null;
+  posts?: (number | NewsPost)[] | null;
+  pagination?: boolean | null;
+  rowsPerPage?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsPosts';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsPosts".
+ */
+export interface NewsPost {
+  id: number;
+  title: string;
+  /**
+   * Write a short description of the news post.
+   */
+  description: string;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewslettersBlock".
+ */
+export interface NewslettersBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  selectionType: 'auto' | 'custom';
+  autoPopulationType?: ('local' | 'state' | 'national') | null;
+  items?: (number | Newsletter)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'newsletters';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SliderBlock".
+ */
+export interface SliderBlock {
+  slides: {
+    media?: (number | null) | Media;
+    richText: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    links?:
+      | {
+          link: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            color: 'primary' | 'secondary';
+            reference?:
+              | ({
+                  relationTo: 'pages';
+                  value: number | Page;
+                } | null)
+              | ({
+                  relationTo: 'charities';
+                  value: number | Charity;
+                } | null)
+              | ({
+                  relationTo: 'events';
+                  value: number | Event;
+                } | null)
+              | ({
+                  relationTo: 'fundraisers';
+                  value: number | Fundraiser;
+                } | null)
+              | ({
+                  relationTo: 'projects';
+                  value: number | Project;
+                } | null)
+              | ({
+                  relationTo: 'courts';
+                  value: number | Court;
+                } | null);
+            /**
+             * This must be the full website URL (i.e. https://www.some-website.com)
+             */
+            url?: string | null;
+            label: string;
+            /**
+             * Choose how the link should be rendered.
+             */
+            appearance?: ('default' | 'outline' | 'solid' | 'soft') | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'slider';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock".
+ */
+export interface StatsBlock {
+  richText: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  stats: {
+    value: number;
+    postfix?: string | null;
+    description: string;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'stats';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SideBarBlock".
+ */
+export interface SideBarBlock {
+  sections: {
+    label: string;
+    richText: {
+      root: {
+        type: string;
+        children: {
+          type: string;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    id?: string | null;
+  }[];
+  alignment: 'left' | 'right';
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'sideBar';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CalendarBlock".
+ */
+export interface CalendarBlock {
+  intro: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  months: {
+    title: string;
+    items?:
+      | {
+          item?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'calendar';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TabsBlock".
+ */
+export interface TabsBlock {
+  tabs: {
+    label: string;
+    content?: (ContentBlock | ContactCardsBlock)[] | null;
+    id?: string | null;
+  }[];
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'tabs';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactCardsBlock".
+ */
+export interface ContactCardsBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  autoPopulate?: boolean | null;
+  contactPosition?: ('officer' | 'chairman' | 'deputy') | null;
+  diocese?: (number | null) | Diocese;
+  officerType?: ('national' | 'state' | 'local') | null;
+  contacts?: (number | Contact)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'contactCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CourtListingBlock".
+ */
+export interface CourtListingBlock {
+  richText: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  selectionType: 'all' | 'diocese' | 'manual';
+  /**
+   * Select the courts you would like to include in the listing; you may choose up to 20 courts. If you do not select any courts, the listing will default to displaying every court.
+   */
+  courts?: (number | Court)[] | null;
+  /**
+   * Select the diocese you would like to filter the listing by. If you do not select a diocese, the listing will default to displaying every court.
+   */
+  diocese?: (number | null) | Diocese;
+  rowsPerPage: number;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'courtListing';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DioceseListingBlock".
+ */
+export interface DioceseListingBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  selectionType: 'all' | 'custom';
+  dioceses?: (number | Diocese)[] | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'dioceseListing';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock".
+ */
+export interface ArchiveBlock {
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  populateBy?: ('collection' | 'selection') | null;
+  relationTo?: ('events' | 'fundraisers' | 'projects' | 'charities') | null;
+  selectedDocs?:
+    | (
+        | {
+            relationTo: 'events';
+            value: number | Event;
+          }
+        | {
+            relationTo: 'fundraisers';
+            value: number | Fundraiser;
+          }
+        | {
+            relationTo: 'projects';
+            value: number | Project;
+          }
+        | {
+            relationTo: 'charities';
+            value: number | Charity;
+          }
+      )[]
+    | null;
+  type?: ('national' | 'state' | 'local') | null;
+  limit?: number | null;
+  pagination?: boolean | null;
+  /**
+   * Choose how many items are shown on each page. If a number is not given, it will default to 3.
+   */
+  itemsPerPage?: number | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'archive';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock".
+ */
+export interface MediaBlock {
+  contentType: 'media' | 'gallery' | 'withText';
+  media?: (number | null) | Media;
+  /**
+   * The ideal ratio for these media files is 16 / 9. Media with vastly different ratios will be cropped heavily in order to fit within the gallery.
+   */
+  galleryMedia?: (number | Media)[] | null;
+  mediaAlignment?: ('left' | 'right') | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline' | 'solid' | 'ghost' | 'soft') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * This determines if the media will move from one slide to the next automatically.
+   */
+  autoPlay?: boolean | null;
+  /**
+   * This determines if the media will loop from the last slide to the first without moving through every previous slide.
+   */
+  looping?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'mediaBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerBlock".
+ */
+export interface BannerBlock {
+  style: 'info' | 'warning' | 'error' | 'success';
+  content: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'banner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock".
+ */
+export interface CallToActionBlock {
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  links?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'cta';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock".
+ */
+export interface FormBlock {
+  form: number | Form;
+  enableIntro?: boolean | null;
+  introContent?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'formBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms".
+ */
+export interface Form {
+  id: number;
+  title: string;
+  fields?:
+    | (
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'checkbox';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'country';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'email';
+          }
+        | {
+            message?: {
+              root: {
+                type: string;
+                children: {
+                  type: string;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            } | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'message';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: number | null;
+            required?: boolean | null;
+            min: number;
+            max: number;
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'number';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            placeholder?: string | null;
+            options?:
+              | {
+                  label: string;
+                  value: string;
+                  id?: string | null;
+                }[]
+              | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'select';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'state';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            type: 'text' | 'password' | 'tel';
+            placeholder?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'text';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            defaultValue?: string | null;
+            required?: boolean | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'textarea';
+          }
+        | {
+            name: string;
+            label?: string | null;
+            width?: number | null;
+            required?: boolean | null;
+            defaultValue?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'date';
+          }
+      )[]
+    | null;
+  submitButtonLabel?: string | null;
+  /**
+   * Choose whether to display an on-page message or redirect to a different page after they submit the form.
+   */
+  confirmationType?: ('message' | 'redirect') | null;
+  confirmationMessage?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  redirect?: {
+    url: string;
+  };
+  /**
+   * Send custom emails when the form submits. Use comma separated lists to send the same email to multiple recipients. To reference a value from this form, wrap that field's name with double curly brackets, i.e. {{firstName}}. You can use a wildcard {{*}} to output all data and {{*:table}} to format it as an HTML table in the email.
+   */
+  emails?:
+    | {
+        emailTo?: string | null;
+        cc?: string | null;
+        bcc?: string | null;
+        replyTo?: string | null;
+        emailFrom?: string | null;
+        subject: string;
+        /**
+         * Enter the message that should be sent in this email.
+         */
+        message?: {
+          root: {
+            type: string;
+            children: {
+              type: string;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        } | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users".
+ */
+export interface User {
+  id: number;
+  name?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  password?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects".
+ */
+export interface Redirect {
+  id: number;
+  /**
+   * You will need to rebuild the website when changing this field.
+   */
+  from: string;
+  to?: {
+    type?: ('reference' | 'custom') | null;
+    reference?: {
+      relationTo: 'pages';
+      value: number | Page;
+    } | null;
+    url?: string | null;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions".
+ */
+export interface FormSubmission {
+  id: number;
+  form: number | Form;
+  submissionData?:
+    | {
+        field: string;
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs".
+ */
+export interface PayloadJob {
+  id: number;
+  /**
+   * Input data provided to the job
+   */
+  input?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  taskStatus?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  completedAt?: string | null;
+  totalTried?: number | null;
+  /**
+   * If hasError is true this job will not be retried
+   */
+  hasError?: boolean | null;
+  /**
+   * If hasError is true, this is the error that caused it
+   */
+  error?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  /**
+   * Task execution log
+   */
+  log?:
+    | {
+        executedAt: string;
+        completedAt: string;
+        taskSlug: 'inline' | 'schedulePublish';
+        taskID: string;
+        input?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        output?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        state: 'failed' | 'succeeded';
+        error?:
+          | {
+              [k: string]: unknown;
+            }
+          | unknown[]
+          | string
+          | number
+          | boolean
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  taskSlug?: ('inline' | 'schedulePublish') | null;
+  queue?: string | null;
+  waitUntil?: string | null;
+  processing?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents".
+ */
+export interface PayloadLockedDocument {
+  id: number;
+  document?:
+    | ({
+        relationTo: 'pages';
+        value: number | Page;
+      } | null)
+    | ({
+        relationTo: 'media';
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
+      } | null)
+    | ({
+        relationTo: 'newsPosts';
+        value: number | NewsPost;
+      } | null)
+    | ({
+        relationTo: 'newsletters';
+        value: number | Newsletter;
+      } | null)
+    | ({
+        relationTo: 'contacts';
+        value: number | Contact;
+      } | null)
+    | ({
+        relationTo: 'dioceses';
+        value: number | Diocese;
+      } | null)
+    | ({
+        relationTo: 'courts';
+        value: number | Court;
+      } | null)
+    | ({
+        relationTo: 'events';
+        value: number | Event;
+      } | null)
+    | ({
+        relationTo: 'fundraisers';
+        value: number | Fundraiser;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: number | Project;
+      } | null)
+    | ({
+        relationTo: 'charities';
+        value: number | Charity;
+      } | null)
+    | ({
+        relationTo: 'redirects';
+        value: number | Redirect;
+      } | null)
+    | ({
+        relationTo: 'forms';
+        value: number | Form;
+      } | null)
+    | ({
+        relationTo: 'form-submissions';
+        value: number | FormSubmission;
+      } | null)
+    | ({
+        relationTo: 'payload-jobs';
+        value: number | PayloadJob;
+      } | null);
+  globalSlug?: string | null;
+  user: {
+    relationTo: 'users';
+    value: number | User;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -107,11 +1980,1378 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  hero?:
+    | T
+    | {
+        highImpactHero?: T | HighImpactHeroSelect<T>;
+        lowImpactHero?: T | LowImpactHeroSelect<T>;
+        mediaRightHero?: T | MediaRightHeroSelect<T>;
+      };
+  layout?:
+    | T
+    | {
+        content?: T | ContentBlockSelect<T>;
+        newsPosts?: T | NewsPostsBlockSelect<T>;
+        newsletters?: T | NewslettersBlockSelect<T>;
+        slider?: T | SliderBlockSelect<T>;
+        stats?: T | StatsBlockSelect<T>;
+        sideBar?: T | SideBarBlockSelect<T>;
+        calendar?: T | CalendarBlockSelect<T>;
+        tabs?: T | TabsBlockSelect<T>;
+        contactCards?: T | ContactCardsBlockSelect<T>;
+        courtListing?: T | CourtListingBlockSelect<T>;
+        dioceseListing?: T | DioceseListingBlockSelect<T>;
+        archive?: T | ArchiveBlockSelect<T>;
+        mediaBlock?: T | MediaBlockSelect<T>;
+        banner?: T | BannerBlockSelect<T>;
+        cta?: T | CallToActionBlockSelect<T>;
+        formBlock?: T | FormBlockSelect<T>;
+      };
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HighImpactHero_select".
+ */
+export interface HighImpactHeroSelect<T extends boolean = true> {
+  logo?: T;
+  media?: T;
+  heading?: T;
+  subHeading?: T;
+  richText?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "LowImpactHero_select".
+ */
+export interface LowImpactHeroSelect<T extends boolean = true> {
+  richText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaRightHero_select".
+ */
+export interface MediaRightHeroSelect<T extends boolean = true> {
+  media?: T;
+  richText?: T;
+  buttonType?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContentBlock_select".
+ */
+export interface ContentBlockSelect<T extends boolean = true> {
+  columns?:
+    | T
+    | {
+        size?: T;
+        richText?: T;
+        enableLink?: T;
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewsPostsBlock_select".
+ */
+export interface NewsPostsBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  selectionType?: T;
+  limit?: T;
+  posts?: T;
+  pagination?: T;
+  rowsPerPage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "NewslettersBlock_select".
+ */
+export interface NewslettersBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  selectionType?: T;
+  autoPopulationType?: T;
+  items?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SliderBlock_select".
+ */
+export interface SliderBlockSelect<T extends boolean = true> {
+  slides?:
+    | T
+    | {
+        media?: T;
+        richText?: T;
+        links?:
+          | T
+          | {
+              link?:
+                | T
+                | {
+                    type?: T;
+                    newTab?: T;
+                    color?: T;
+                    reference?: T;
+                    url?: T;
+                    label?: T;
+                    appearance?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StatsBlock_select".
+ */
+export interface StatsBlockSelect<T extends boolean = true> {
+  richText?: T;
+  stats?:
+    | T
+    | {
+        value?: T;
+        postfix?: T;
+        description?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SideBarBlock_select".
+ */
+export interface SideBarBlockSelect<T extends boolean = true> {
+  sections?:
+    | T
+    | {
+        label?: T;
+        richText?: T;
+        id?: T;
+      };
+  alignment?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CalendarBlock_select".
+ */
+export interface CalendarBlockSelect<T extends boolean = true> {
+  intro?: T;
+  months?:
+    | T
+    | {
+        title?: T;
+        items?:
+          | T
+          | {
+              item?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TabsBlock_select".
+ */
+export interface TabsBlockSelect<T extends boolean = true> {
+  tabs?:
+    | T
+    | {
+        label?: T;
+        content?:
+          | T
+          | {
+              content?: T | ContentBlockSelect<T>;
+              contactCards?: T | ContactCardsBlockSelect<T>;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactCardsBlock_select".
+ */
+export interface ContactCardsBlockSelect<T extends boolean = true> {
+  richText?: T;
+  autoPopulate?: T;
+  contactPosition?: T;
+  diocese?: T;
+  officerType?: T;
+  contacts?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CourtListingBlock_select".
+ */
+export interface CourtListingBlockSelect<T extends boolean = true> {
+  richText?: T;
+  selectionType?: T;
+  courts?: T;
+  diocese?: T;
+  rowsPerPage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "DioceseListingBlock_select".
+ */
+export interface DioceseListingBlockSelect<T extends boolean = true> {
+  richText?: T;
+  selectionType?: T;
+  dioceses?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ArchiveBlock_select".
+ */
+export interface ArchiveBlockSelect<T extends boolean = true> {
+  introContent?: T;
+  populateBy?: T;
+  relationTo?: T;
+  selectedDocs?: T;
+  type?: T;
+  limit?: T;
+  pagination?: T;
+  itemsPerPage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "MediaBlock_select".
+ */
+export interface MediaBlockSelect<T extends boolean = true> {
+  contentType?: T;
+  media?: T;
+  galleryMedia?: T;
+  mediaAlignment?: T;
+  content?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  autoPlay?: T;
+  looping?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BannerBlock_select".
+ */
+export interface BannerBlockSelect<T extends boolean = true> {
+  style?: T;
+  content?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CallToActionBlock_select".
+ */
+export interface CallToActionBlockSelect<T extends boolean = true> {
+  richText?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FormBlock_select".
+ */
+export interface FormBlockSelect<T extends boolean = true> {
+  form?: T;
+  enableIntro?: T;
+  introContent?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        square?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        small?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        medium?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        large?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        xlarge?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        og?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "users_select".
+ */
+export interface UsersSelect<T extends boolean = true> {
+  name?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsPosts_select".
+ */
+export interface NewsPostsSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  links?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "newsletters_select".
+ */
+export interface NewslettersSelect<T extends boolean = true> {
+  title?: T;
+  yearOfRelease?: T;
+  type?: T;
+  associatedCourt?: T;
+  reissueDate?: T;
+  displayTitle?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contacts_select".
+ */
+export interface ContactsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  image?: T;
+  roles?:
+    | T
+    | {
+        role?: T;
+        id?: T;
+      };
+  positions?: T;
+  officerType?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "dioceses_select".
+ */
+export interface DiocesesSelect<T extends boolean = true> {
+  name?: T;
+  website?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        color?: T;
+        reference?: T;
+        url?: T;
+      };
+  location?:
+    | T
+    | {
+        address?: T;
+        city?: T;
+        state?: T;
+        zipcode?: T;
+      };
+  phoneNumber?: T;
+  deputies?: T;
+  info?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "courts_select".
+ */
+export interface CourtsSelect<T extends boolean = true> {
+  name?: T;
+  diocese?: T;
+  number?: T;
+  instituted?: T;
+  includeWebsite?: T;
+  website?:
+    | T
+    | {
+        type?: T;
+        newTab?: T;
+        color?: T;
+        reference?: T;
+        url?: T;
+        label?: T;
+        appearance?: T;
+      };
+  location?:
+    | T
+    | {
+        address?: T;
+        city?: T;
+        state?: T;
+        zipcode?: T;
+      };
+  phoneNumber?: T;
+  contactEmail?: T;
+  officers?:
+    | T
+    | {
+        regent?: T;
+        viceRegent?: T;
+        recordingSecretary?: T;
+        financialSecretary?: T;
+        treasurer?: T;
+      };
+  newsletters?: T;
+  content?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  publishedAt?: T;
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "events_select".
+ */
+export interface EventsSelect<T extends boolean = true> {
+  name?: T;
+  dates?:
+    | T
+    | {
+        startDate?: T;
+        endDate?: T;
+      };
+  location?:
+    | T
+    | {
+        address?: T;
+        city?: T;
+        state?: T;
+        zipcode?: T;
+      };
+  type?: T;
+  associatedCourt?: T;
+  content?: T;
+  relatedEvents?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "fundraisers_select".
+ */
+export interface FundraisersSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  associatedCourt?: T;
+  content?: T;
+  relatedFundraisers?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects_select".
+ */
+export interface ProjectsSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  associatedCourt?: T;
+  content?: T;
+  relatedProjects?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "charities_select".
+ */
+export interface CharitiesSelect<T extends boolean = true> {
+  name?: T;
+  type?: T;
+  associatedCourt?: T;
+  content?: T;
+  relatedCharities?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        image?: T;
+        description?: T;
+      };
+  slug?: T;
+  slugLock?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "redirects_select".
+ */
+export interface RedirectsSelect<T extends boolean = true> {
+  from?: T;
+  to?:
+    | T
+    | {
+        type?: T;
+        reference?: T;
+        url?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "forms_select".
+ */
+export interface FormsSelect<T extends boolean = true> {
+  title?: T;
+  fields?:
+    | T
+    | {
+        checkbox?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+        country?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        email?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              placeholder?: T;
+              id?: T;
+              blockName?: T;
+            };
+        message?:
+          | T
+          | {
+              message?: T;
+              id?: T;
+              blockName?: T;
+            };
+        number?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              min?: T;
+              max?: T;
+              placeholder?: T;
+              id?: T;
+              blockName?: T;
+            };
+        select?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              placeholder?: T;
+              options?:
+                | T
+                | {
+                    label?: T;
+                    value?: T;
+                    id?: T;
+                  };
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        state?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        text?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              type?: T;
+              placeholder?: T;
+              id?: T;
+              blockName?: T;
+            };
+        textarea?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              defaultValue?: T;
+              required?: T;
+              id?: T;
+              blockName?: T;
+            };
+        date?:
+          | T
+          | {
+              name?: T;
+              label?: T;
+              width?: T;
+              required?: T;
+              defaultValue?: T;
+              id?: T;
+              blockName?: T;
+            };
+      };
+  submitButtonLabel?: T;
+  confirmationType?: T;
+  confirmationMessage?: T;
+  redirect?:
+    | T
+    | {
+        url?: T;
+      };
+  emails?:
+    | T
+    | {
+        emailTo?: T;
+        cc?: T;
+        bcc?: T;
+        replyTo?: T;
+        emailFrom?: T;
+        subject?: T;
+        message?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "form-submissions_select".
+ */
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  form?: T;
+  submissionData?:
+    | T
+    | {
+        field?: T;
+        value?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-jobs_select".
+ */
+export interface PayloadJobsSelect<T extends boolean = true> {
+  input?: T;
+  taskStatus?: T;
+  completedAt?: T;
+  totalTried?: T;
+  hasError?: T;
+  error?: T;
+  log?:
+    | T
+    | {
+        executedAt?: T;
+        completedAt?: T;
+        taskSlug?: T;
+        taskID?: T;
+        input?: T;
+        output?: T;
+        state?: T;
+        error?: T;
+        id?: T;
+      };
+  taskSlug?: T;
+  queue?: T;
+  waitUntil?: T;
+  processing?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-locked-documents_select".
+ */
+export interface PayloadLockedDocumentsSelect<T extends boolean = true> {
+  document?: T;
+  globalSlug?: T;
+  user?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-preferences_select".
+ */
+export interface PayloadPreferencesSelect<T extends boolean = true> {
+  user?: T;
+  key?: T;
+  value?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "payload-migrations_select".
+ */
+export interface PayloadMigrationsSelect<T extends boolean = true> {
+  name?: T;
+  batch?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+        };
+        description?: string | null;
+        subNav?:
+          | {
+              label: string;
+              links?:
+                | {
+                    link: {
+                      type?: ('reference' | 'custom') | null;
+                      newTab?: boolean | null;
+                      color: 'primary' | 'secondary';
+                      reference?:
+                        | ({
+                            relationTo: 'pages';
+                            value: number | Page;
+                          } | null)
+                        | ({
+                            relationTo: 'charities';
+                            value: number | Charity;
+                          } | null)
+                        | ({
+                            relationTo: 'events';
+                            value: number | Event;
+                          } | null)
+                        | ({
+                            relationTo: 'fundraisers';
+                            value: number | Fundraiser;
+                          } | null)
+                        | ({
+                            relationTo: 'projects';
+                            value: number | Project;
+                          } | null)
+                        | ({
+                            relationTo: 'courts';
+                            value: number | Court;
+                          } | null);
+                      /**
+                       * This must be the full website URL (i.e. https://www.some-website.com)
+                       */
+                      url?: string | null;
+                      label: string;
+                    };
+                    id?: string | null;
+                  }[]
+                | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  navButtons?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+          /**
+           * Choose how the link should be rendered.
+           */
+          appearance?: ('default' | 'solid' | 'soft' | 'outline') | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  logo?: (number | null) | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  navHeading?: string | null;
+  navItems?:
+    | {
+        link: {
+          type?: ('reference' | 'custom') | null;
+          newTab?: boolean | null;
+          color: 'primary' | 'secondary';
+          reference?:
+            | ({
+                relationTo: 'pages';
+                value: number | Page;
+              } | null)
+            | ({
+                relationTo: 'charities';
+                value: number | Charity;
+              } | null)
+            | ({
+                relationTo: 'events';
+                value: number | Event;
+              } | null)
+            | ({
+                relationTo: 'fundraisers';
+                value: number | Fundraiser;
+              } | null)
+            | ({
+                relationTo: 'projects';
+                value: number | Project;
+              } | null)
+            | ({
+                relationTo: 'courts';
+                value: number | Court;
+              } | null);
+          /**
+           * This must be the full website URL (i.e. https://www.some-website.com)
+           */
+          url?: string | null;
+          label: string;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  logo?: (number | null) | Media;
+  richText?: {
+    root: {
+      type: string;
+      children: {
+        type: string;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  socialMedia?:
+    | {
+        platform: 'linkedin' | 'facebook' | 'instagram' | 'twitter' | 'youtube';
+        /**
+         * This must be the full website URL (i.e. https://www.some-website.com)
+         */
+        link: string;
+        id?: string | null;
+      }[]
+    | null;
+  copyrightText: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        description?: T;
+        subNav?:
+          | T
+          | {
+              label?: T;
+              links?:
+                | T
+                | {
+                    link?:
+                      | T
+                      | {
+                          type?: T;
+                          newTab?: T;
+                          color?: T;
+                          reference?: T;
+                          url?: T;
+                          label?: T;
+                        };
+                    id?: T;
+                  };
+              id?: T;
+            };
+        id?: T;
+      };
+  navButtons?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+              appearance?: T;
+            };
+        id?: T;
+      };
+  logo?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  navHeading?: T;
+  navItems?:
+    | T
+    | {
+        link?:
+          | T
+          | {
+              type?: T;
+              newTab?: T;
+              color?: T;
+              reference?: T;
+              url?: T;
+              label?: T;
+            };
+        id?: T;
+      };
+  logo?: T;
+  richText?: T;
+  socialMedia?:
+    | T
+    | {
+        platform?: T;
+        link?: T;
+        id?: T;
+      };
+  copyrightText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TaskSchedulePublish".
+ */
+export interface TaskSchedulePublish {
+  input: {
+    type?: ('publish' | 'unpublish') | null;
+    locale?: string | null;
+    doc?:
+      | ({
+          relationTo: 'pages';
+          value: number | Page;
+        } | null)
+      | ({
+          relationTo: 'courts';
+          value: number | Court;
+        } | null)
+      | ({
+          relationTo: 'events';
+          value: number | Event;
+        } | null)
+      | ({
+          relationTo: 'fundraisers';
+          value: number | Fundraiser;
+        } | null)
+      | ({
+          relationTo: 'projects';
+          value: number | Project;
+        } | null)
+      | ({
+          relationTo: 'charities';
+          value: number | Charity;
+        } | null);
+    global?: string | null;
+    user?: (number | null) | User;
+  };
+  output?: unknown;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
