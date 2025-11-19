@@ -51,10 +51,10 @@ export const SocialMediaIcon: React.FC<{
     return (
       <Link href={link} target="_blank">
         <Tooltip content={iconMap[platform].tooltip}>
-          <IconButton size="2" color="gray" radius="medium" highContrast>
+          <IconButton size="1" color="gray" radius="medium" highContrast>
             <FontAwesomeIcon
               icon={iconMap[platform].icon}
-              style={{ width: '1.3em', height: '1.3em' }}
+              style={{ width: '1em', height: '1em' }}
               color="var(--yellow-5)"
             />
           </IconButton>
