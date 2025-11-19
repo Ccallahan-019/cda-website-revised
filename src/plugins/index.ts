@@ -2,6 +2,7 @@ import { payloadCloudPlugin } from '@payloadcms/payload-cloud'
 import { fields, formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
@@ -47,6 +48,15 @@ export const plugins: Plugin[] = [
   seoPlugin({
     generateTitle,
     generateURL,
+  }),
+  vercelBlobStorage({
+    enabled: true,
+    collections: {
+      media: true,
+      newsletters: true,
+    },
+    token: process.env.BLOB_READ_WRITE_TOKEN,
+    clientUploads: true,
   }),
   formBuilderPlugin({
     fields: {
