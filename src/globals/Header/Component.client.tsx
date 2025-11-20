@@ -61,7 +61,7 @@ export const HeaderClient: React.FC<HeaderProps> = (props) => {
       <Box
         position="fixed"
         top="0"
-        px="5"
+        px={{ initial: '4', xs: '5' }}
         style={{
           backgroundColor: 'var(--color-panel-solid)',
           transition: 'background-color 0.2s ease',
@@ -74,7 +74,11 @@ export const HeaderClient: React.FC<HeaderProps> = (props) => {
           {/* Modify headerAdjustment in cssVariables.js if header size changes */}
           <Flex justify="between" align="center" height={headerHeight}>
             <Box>
-              <Link href="/">{logo && typeof logo === 'object' && <Logo {...logo} />}</Link>
+              <Link href="/">
+                {logo && typeof logo === 'object' && (
+                  <Logo imageClassName="h-[2.5rem] sm:h-[3rem] w-auto" {...logo} />
+                )}
+              </Link>
             </Box>
 
             <HeaderNav
@@ -86,7 +90,7 @@ export const HeaderClient: React.FC<HeaderProps> = (props) => {
               onLinkClick={handleLinkClick}
             />
 
-            <Flex gap="4" align="center">
+            <Flex gap={{ initial: '3', xs: '4' }} align="center">
               {Array.isArray(navButtons) &&
                 navButtons.length > 0 &&
                 navButtons.map((button, index) => {
@@ -95,8 +99,8 @@ export const HeaderClient: React.FC<HeaderProps> = (props) => {
                 })}
               <ThemeToggle />
               <Box ref={sideNavRef} display={{ initial: 'block', lg: 'none' }}>
-                <IconButton onClick={toggleSideNav} variant="soft">
-                  <MenuIcon size={20} />
+                <IconButton onClick={toggleSideNav} variant="soft" size="2">
+                  <MenuIcon size={22} strokeWidth={2.25} />
                 </IconButton>
                 <Box>
                   {isSideNavVisible && (
