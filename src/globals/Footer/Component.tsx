@@ -26,7 +26,7 @@ export async function Footer() {
   return (
     <Container asChild style={{ boxShadow: 'var(--shadow-4)' }}>
       <footer>
-        <Flex direction="column" align="center" gap="4" py="4">
+        <Flex direction="column" align="center" gap="5" py="5">
           <Flex
             gap="5"
             direction={{ initial: 'column', md: 'row' }}
@@ -34,11 +34,11 @@ export async function Footer() {
             align={{ initial: 'start', md: 'center' }}
             width="100%"
           >
-            <Flex direction="column" gap="5">
+            <Flex direction="column" gap={{ initial: '3', md: '4' }}>
               <Link href="/">
                 <Flex align="center">
                   {logo && typeof logo === 'object' && (
-                    <Logo imageClassName="h-[4rem] w-auto" {...logo} />
+                    <Logo imageClassName="h-[3rem] sm:h-[4rem] w-auto" {...logo} />
                   )}
                 </Flex>
               </Link>
