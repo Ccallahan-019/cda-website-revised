@@ -23,12 +23,6 @@ export const GET_FUNDRAISER_BY_SLUG = gql`
           slug
         }
         content
-        heroImage {
-          url
-          alt
-          height
-          width
-        }
         relatedFundraisers {
           id
           slug
