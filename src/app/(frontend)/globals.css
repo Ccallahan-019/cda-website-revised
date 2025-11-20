@@ -67,10 +67,10 @@
 
 /* rich text spacing */
 .richtext-child:not(:last-child) {
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-3);
 }
 .richtext-child:not(:first-child) {
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
 }
 .richtext-block:not(:last-child) {
   margin-bottom: var(--space-6);
