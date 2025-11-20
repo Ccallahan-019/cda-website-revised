@@ -43,7 +43,7 @@ export const NewslettersBlock: React.FC<
 
   return (
     <Container>
-      <Flex direction="column" gap="6">
+      <Flex direction="column" gap={{ initial: '4', xs: '5' }}>
         <Box maxWidth="48rem">{introContent && <RichText data={introContent} />}</Box>
 
         <NewsletterArchive newsletters={newsletters} />
