@@ -57,6 +57,7 @@ export const plugins: Plugin[] = [
     },
     token: process.env.BLOB_READ_WRITE_TOKEN,
     clientUploads: true,
+    addRandomSuffix: true,
   }),
   formBuilderPlugin({
     fields: {
