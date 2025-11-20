@@ -80,7 +80,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
 
     return (
       <Spacer>
-        <Box pl={`${indent * 24}px`}>
+        <Box pl={`${indent * 24}px`} py="2">
           <Heading as={tag}>{nodesToJSX({ nodes: node.children })}</Heading>
         </Box>
       </Spacer>
@@ -111,7 +111,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     return (
       <Spacer>
         <Box pl={`${indent * 24}px`}>
-          <ul className={`${listClass} list-outside`}>{nodesToJSX({ nodes: node.children })}</ul>
+          <ul className={`${listClass} list-inside`}>{nodesToJSX({ nodes: node.children })}</ul>
         </Box>
       </Spacer>
     )
