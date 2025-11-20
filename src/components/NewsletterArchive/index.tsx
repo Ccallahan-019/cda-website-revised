@@ -8,6 +8,7 @@ import { Link } from '../UI/RadixComponents/Typography/Link'
 import { DownloadIcon } from 'lucide-react'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { useState } from 'react'
+import { Heading } from '../UI/RadixComponents/Typography/Heading'
 
 export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props) => {
   const { newsletters } = props
@@ -35,7 +36,7 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
 
   return (
     <Card size="4">
-      <Flex direction="column" gap="4">
+      <Flex direction="column" gap="5">
         <Flex justify="end">
           <Select.Root size="3" onValueChange={handleYearChange} defaultValue="2025">
             <Select.Trigger />
@@ -61,12 +62,13 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
               columns={{ initial: '3', md: '5' }}
               gap="2"
               align="center"
+              px="1"
               key={newsletter.id || index}
             >
               <Flex gridArea={{ initial: '1 / 3 / 2 / 4', md: '1 / 5 / 2 / 6' }} justify="end">
                 {newsletter.url && (
                   <Tooltip content="Download">
-                    <Link href={newsletter.url} download={newsletter.filename}>
+                    <Link href={newsletter.url} newTab>
                       <IconButton variant="soft" style={{ cursor: 'pointer' }}>
                         <DownloadIcon size={20} />
                       </IconButton>
@@ -76,13 +78,16 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
               </Flex>
 
               <Box gridArea={{ initial: '1 / 1 / 2 / 3', md: '1 / 1 / 2 / 2' }}>
-                <Text weight="medium">{newsletter.title}</Text>
+                <Heading as="h6" weight={{ initial: 'regular', xs: 'medium' }}>
+                  {newsletter.title}
+                </Heading>
               </Box>
 
               <Flex
                 direction="column"
                 gap="1"
                 gridArea={{ initial: '2 / 1 / 3 / 2', md: '1 / 2 / 2 / 3' }}
+                display={{ initial: 'none', sm: 'flex' }}
               >
                 <Text weight="medium">Size</Text>
                 {newsletter.filesize && <Text color="gray">{`${filesize} MB`}</Text>}
@@ -91,12 +96,13 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
               <Flex
                 direction="column"
                 gap="1"
-                gridArea={{ initial: '2 / 2 / 3 / 3', md: '1 / 3 / 2 / 4' }}
+                gridArea={{ initial: '2 / 1 / 3 / 2', sm: '2 / 2 / 3 / 3', md: '1 / 3 / 2 / 4' }}
+                display={{ initial: 'none', xs: 'flex' }}
               >
-                <Text weight="medium" align={{ initial: 'center', md: 'left' }}>
+                <Text weight="medium" align={{ initial: 'left', sm: 'center', md: 'left' }}>
                   Year
                 </Text>
-                <Text color="gray" align={{ initial: 'center', md: 'left' }}>
+                <Text color="gray" align={{ initial: 'left', sm: 'center', md: 'left' }}>
                   {newsletter.yearOfRelease}
                 </Text>
               </Flex>
@@ -105,6 +111,7 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
                 direction="column"
                 gap="1"
                 gridArea={{ initial: '2 / 3 / 3 / 4', md: '1 / 4 / 2 / 5' }}
+                display={{ initial: 'none', xs: 'flex' }}
               >
                 <Text weight="medium" align={{ initial: 'right', md: 'left' }}>
                   Re-Issued
