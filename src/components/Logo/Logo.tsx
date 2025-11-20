@@ -9,7 +9,7 @@ export const Logo: React.FC<{ imageClassName?: string } & MediaProps> = ({
   return (
     <>
       {media && typeof media === 'object' && (
-        <Media imgClassName={imageClassName ?? 'h-[3rem] w-auto'} resource={media} />
+        <Media priority imgClassName={imageClassName ?? 'h-[3rem] w-auto'} resource={media} />
       )}
     </>
   )
