@@ -7,6 +7,7 @@
   "scripts": {
     "build:skip-data": "SKIP_BUILD_STATIC_GENERATION=true next build",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "ci": "payload migrate && npm run build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs",
     "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
     "dev:prod": "cross-env NODE_OPTIONS=--no-deprecation rm -rf .next && pnpm build && pnpm start",
