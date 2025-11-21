@@ -5,7 +5,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build:skip-data": "SKIP_BUILD_STATIC_GENERATION=true next build",
+    "build:skip-static-generation": "next build --experimental-build-mode compile",
     "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
     "ci": "payload migrate && npm run build",
     "postbuild": "next-sitemap --config next-sitemap.config.cjs",
