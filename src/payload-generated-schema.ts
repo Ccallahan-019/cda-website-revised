@@ -20,6 +20,7 @@ import {
   numeric,
   serial,
   timestamp,
+  type AnyPgColumn,
   pgEnum,
 } from '@payloadcms/db-vercel-postgres/drizzle/pg-core'
 import { sql, relations } from '@payloadcms/db-vercel-postgres/drizzle'
@@ -1237,6 +1238,30 @@ export const pages_blocks_form_block = pgTable(
   }),
 )
 
+export const pages_breadcrumbs = pgTable(
+  'pages_breadcrumbs',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: varchar('id').primaryKey(),
+    doc: integer('doc_id').references(() => pages.id, {
+      onDelete: 'set null',
+    }),
+    url: varchar('url'),
+    label: varchar('label'),
+  },
+  (columns) => ({
+    _orderIdx: index('pages_breadcrumbs_order_idx').on(columns._order),
+    _parentIDIdx: index('pages_breadcrumbs_parent_id_idx').on(columns._parentID),
+    pages_breadcrumbs_doc_idx: index('pages_breadcrumbs_doc_idx').on(columns.doc),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [pages.id],
+      name: 'pages_breadcrumbs_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
 export const pages = pgTable(
   'pages',
   {
@@ -1250,6 +1275,9 @@ export const pages = pgTable(
     publishedAt: timestamp('published_at', { mode: 'string', withTimezone: true, precision: 3 }),
     slug: varchar('slug'),
     slugLock: boolean('slug_lock').default(true),
+    parent: integer('parent_id').references((): AnyPgColumn => pages.id, {
+      onDelete: 'set null',
+    }),
     updatedAt: timestamp('updated_at', { mode: 'string', withTimezone: true, precision: 3 })
       .defaultNow()
       .notNull(),
@@ -1261,6 +1289,7 @@ export const pages = pgTable(
   (columns) => ({
     pages_meta_meta_image_idx: index('pages_meta_meta_image_idx').on(columns.meta_image),
     pages_slug_idx: index('pages_slug_idx').on(columns.slug),
+    pages_parent_idx: index('pages_parent_idx').on(columns.parent),
     pages_updated_at_idx: index('pages_updated_at_idx').on(columns.updatedAt),
     pages_created_at_idx: index('pages_created_at_idx').on(columns.createdAt),
     pages__status_idx: index('pages__status_idx').on(columns._status),
@@ -2180,6 +2209,33 @@ export const _pages_v_blocks_form_block = pgTable(
   }),
 )
 
+export const _pages_v_version_breadcrumbs = pgTable(
+  '_pages_v_version_breadcrumbs',
+  {
+    _order: integer('_order').notNull(),
+    _parentID: integer('_parent_id').notNull(),
+    id: serial('id').primaryKey(),
+    doc: integer('doc_id').references(() => pages.id, {
+      onDelete: 'set null',
+    }),
+    url: varchar('url'),
+    label: varchar('label'),
+    _uuid: varchar('_uuid'),
+  },
+  (columns) => ({
+    _orderIdx: index('_pages_v_version_breadcrumbs_order_idx').on(columns._order),
+    _parentIDIdx: index('_pages_v_version_breadcrumbs_parent_id_idx').on(columns._parentID),
+    _pages_v_version_breadcrumbs_doc_idx: index('_pages_v_version_breadcrumbs_doc_idx').on(
+      columns.doc,
+    ),
+    _parentIDFk: foreignKey({
+      columns: [columns['_parentID']],
+      foreignColumns: [_pages_v.id],
+      name: '_pages_v_version_breadcrumbs_parent_id_fk',
+    }).onDelete('cascade'),
+  }),
+)
+
 export const _pages_v = pgTable(
   '_pages_v',
   {
@@ -2200,6 +2256,9 @@ export const _pages_v = pgTable(
     }),
     version_slug: varchar('version_slug'),
     version_slugLock: boolean('version_slug_lock').default(true),
+    version_parent: integer('version_parent_id').references(() => pages.id, {
+      onDelete: 'set null',
+    }),
     version_updatedAt: timestamp('version_updated_at', {
       mode: 'string',
       withTimezone: true,
@@ -2227,6 +2286,9 @@ export const _pages_v = pgTable(
     ).on(columns.version_meta_image),
     _pages_v_version_version_slug_idx: index('_pages_v_version_version_slug_idx').on(
       columns.version_slug,
+    ),
+    _pages_v_version_version_parent_idx: index('_pages_v_version_version_parent_idx').on(
+      columns.version_parent,
     ),
     _pages_v_version_version_updated_at_idx: index('_pages_v_version_version_updated_at_idx').on(
       columns.version_updatedAt,
@@ -5235,6 +5297,18 @@ export const relations_pages_blocks_form_block = relations(pages_blocks_form_blo
     relationName: 'form',
   }),
 }))
+export const relations_pages_breadcrumbs = relations(pages_breadcrumbs, ({ one }) => ({
+  _parentID: one(pages, {
+    fields: [pages_breadcrumbs._parentID],
+    references: [pages.id],
+    relationName: 'breadcrumbs',
+  }),
+  doc: one(pages, {
+    fields: [pages_breadcrumbs.doc],
+    references: [pages.id],
+    relationName: 'doc',
+  }),
+}))
 export const relations_pages_rels = relations(pages_rels, ({ one }) => ({
   parent: one(pages, {
     fields: [pages_rels.parent],
@@ -5359,6 +5433,14 @@ export const relations_pages = relations(pages, ({ one, many }) => ({
     fields: [pages.meta_image],
     references: [media.id],
     relationName: 'meta_image',
+  }),
+  parent: one(pages, {
+    fields: [pages.parent],
+    references: [pages.id],
+    relationName: 'parent',
+  }),
+  breadcrumbs: many(pages_breadcrumbs, {
+    relationName: 'breadcrumbs',
   }),
   _rels: many(pages_rels, {
     relationName: '_rels',
@@ -5738,6 +5820,21 @@ export const relations__pages_v_blocks_form_block = relations(
     }),
   }),
 )
+export const relations__pages_v_version_breadcrumbs = relations(
+  _pages_v_version_breadcrumbs,
+  ({ one }) => ({
+    _parentID: one(_pages_v, {
+      fields: [_pages_v_version_breadcrumbs._parentID],
+      references: [_pages_v.id],
+      relationName: 'version_breadcrumbs',
+    }),
+    doc: one(pages, {
+      fields: [_pages_v_version_breadcrumbs.doc],
+      references: [pages.id],
+      relationName: 'doc',
+    }),
+  }),
+)
 export const relations__pages_v_rels = relations(_pages_v_rels, ({ one }) => ({
   parent: one(_pages_v, {
     fields: [_pages_v_rels.parent],
@@ -5867,6 +5964,14 @@ export const relations__pages_v = relations(_pages_v, ({ one, many }) => ({
     fields: [_pages_v.version_meta_image],
     references: [media.id],
     relationName: 'version_meta_image',
+  }),
+  version_parent: one(pages, {
+    fields: [_pages_v.version_parent],
+    references: [pages.id],
+    relationName: 'version_parent',
+  }),
+  version_breadcrumbs: many(_pages_v_version_breadcrumbs, {
+    relationName: 'version_breadcrumbs',
   }),
   _rels: many(_pages_v_rels, {
     relationName: '_rels',
@@ -7025,6 +7130,7 @@ type DatabaseSchema = {
   pages_blocks_cta_links: typeof pages_blocks_cta_links
   pages_blocks_cta: typeof pages_blocks_cta
   pages_blocks_form_block: typeof pages_blocks_form_block
+  pages_breadcrumbs: typeof pages_breadcrumbs
   pages: typeof pages
   pages_rels: typeof pages_rels
   _pages_v_blocks_high_impact_hero_links: typeof _pages_v_blocks_high_impact_hero_links
@@ -7058,6 +7164,7 @@ type DatabaseSchema = {
   _pages_v_blocks_cta_links: typeof _pages_v_blocks_cta_links
   _pages_v_blocks_cta: typeof _pages_v_blocks_cta
   _pages_v_blocks_form_block: typeof _pages_v_blocks_form_block
+  _pages_v_version_breadcrumbs: typeof _pages_v_version_breadcrumbs
   _pages_v: typeof _pages_v
   _pages_v_rels: typeof _pages_v_rels
   media: typeof media
@@ -7157,6 +7264,7 @@ type DatabaseSchema = {
   relations_pages_blocks_cta_links: typeof relations_pages_blocks_cta_links
   relations_pages_blocks_cta: typeof relations_pages_blocks_cta
   relations_pages_blocks_form_block: typeof relations_pages_blocks_form_block
+  relations_pages_breadcrumbs: typeof relations_pages_breadcrumbs
   relations_pages_rels: typeof relations_pages_rels
   relations_pages: typeof relations_pages
   relations__pages_v_blocks_high_impact_hero_links: typeof relations__pages_v_blocks_high_impact_hero_links
@@ -7190,6 +7298,7 @@ type DatabaseSchema = {
   relations__pages_v_blocks_cta_links: typeof relations__pages_v_blocks_cta_links
   relations__pages_v_blocks_cta: typeof relations__pages_v_blocks_cta
   relations__pages_v_blocks_form_block: typeof relations__pages_v_blocks_form_block
+  relations__pages_v_version_breadcrumbs: typeof relations__pages_v_version_breadcrumbs
   relations__pages_v_rels: typeof relations__pages_v_rels
   relations__pages_v: typeof relations__pages_v
   relations_media: typeof relations_media
