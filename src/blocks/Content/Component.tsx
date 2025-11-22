@@ -5,7 +5,7 @@ import type { ContentBlock as ContentBlockProps } from '@/payload-types'
 
 import { CMSLink } from '../../components/Link'
 import { Container } from '@/components/UI/RadixComponents/Layout/Container'
-import { Box, Grid } from '@radix-ui/themes'
+import { Box, Flex, Grid } from '@radix-ui/themes'
 
 export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
   const { columns } = props
@@ -19,7 +19,7 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
   return (
     <Container>
-      <Grid columns={{ initial: '4', lg: '12' }} gapX="9" gapY="5">
+      <Grid columns={{ initial: '4', lg: '12' }} gapX="9" gapY="5" align="stretch">
         {columns &&
           columns.length > 0 &&
           columns.map((col, index) => {
@@ -27,16 +27,22 @@ export const ContentBlock: React.FC<ContentBlockProps> = (props) => {
 
             return (
               <Box
+                key={index}
                 gridColumn={{
                   initial: 'span 4',
                   md: size !== 'full' ? 'span 2' : undefined,
                   lg: `span ${colsSpanClasses[size!]}`,
                 }}
-                key={index}
               >
-                {richText && <RichText data={richText} enableGutter={false} />}
+                <Flex direction="column" gap="5" align="start" height="100%">
+                  {richText && <RichText data={richText} enableGutter={false} />}
 
-                {enableLink && <CMSLink {...link} />}
+                  {enableLink && (
+                    <Box mt="auto">
+                      <CMSLink {...link} />
+                    </Box>
+                  )}
+                </Flex>
               </Box>
             )
           })}
