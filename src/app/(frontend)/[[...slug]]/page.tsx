@@ -1,8 +1,6 @@
-const SKIP_BUILD_STATIC_GENERATION = process.env.SKIP_BUILD_STATIC_GENERATION === 'true'
-
 import { notFound } from 'next/navigation'
 import { getApolloServerClient } from '@/graphql/apolloClient'
-import { GET_PAGE_BY_SLUG } from '@/graphql/queries/pages/page'
+import { GET_PAGE_BY_SLUG, GET_PAGE_BY_PATH } from '@/graphql/queries/pages/page'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
 import { cookies, draftMode } from 'next/headers'
@@ -18,93 +16,99 @@ export const dynamicParams = true
 
 type Args = {
   params: Promise<{
-    slug?: string
+    slug?: string[]
   }>
 }
 
+const buildPathFromSegments = (segments?: string[]) => {
+  if (!segments || segments.length === 0) return '/'
+  return `/${segments.join('/')}`
+}
+
 export async function generateStaticParams() {
-  if (SKIP_BUILD_STATIC_GENERATION) {
-    // Don't pre-generate any paths while backend isn't available
-    return []
-  }
-
   const client = getApolloServerClient()
-  const pages = await client.query({
-    query: GET_PAGE_SLUGS,
-  })
+  const pages = await client.query({ query: GET_PAGE_SLUGS })
 
-  const params = pages.data.Pages.docs
-    ?.filter((doc: Document) => {
-      return doc.slug !== 'home'
-    })
-    .map(({ slug }: { slug: string }) => {
-      return { slug }
-    })
+  const params =
+    pages.data.Pages.docs
+      ?.filter((doc: Document) => doc.slug !== 'home')
+      .map((doc: Document) => {
+        const lastUrl = doc.breadcrumbs?.[doc.breadcrumbs.length - 1]?.url as string | undefined
+
+        if (!lastUrl) return null
+
+        const segments = lastUrl.split('/').filter(Boolean)
+
+        return { slug: segments }
+      })
+      .filter(Boolean) ?? []
 
   return params
 }
 
-const queryPageBySlug = async ({ slug }: { slug: string }) => {
-  if (SKIP_BUILD_STATIC_GENERATION) {
-    return null
-  }
-
+const queryPageByPath = async (segments?: string[]) => {
   const { isEnabled: draft } = await draftMode()
   const cookieStore = await cookies()
   const token = draft ? cookieStore.get('payload-token')?.value : undefined
-
   const client = getApolloServerClient(token)
 
+  const path = buildPathFromSegments(segments)
+
+  if (path === '/') {
+    const { data } = await client.query({
+      query: GET_PAGE_BY_SLUG,
+      variables: { slug: 'home', draft },
+    })
+    return data.Pages.docs[0] || null
+  }
+
+  if (segments && segments.length === 1) {
+    const { data } = await client.query({
+      query: GET_PAGE_BY_SLUG,
+      variables: { slug: segments[0], draft },
+    })
+    return data.Pages.docs[0] || null
+  }
+
   const { data } = await client.query({
-    query: GET_PAGE_BY_SLUG,
-    variables: { slug, draft },
+    query: GET_PAGE_BY_PATH,
+    variables: {
+      path,
+      draft,
+    },
   })
 
   return data.Pages.docs[0] || null
 }
 
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
-  const { slug = 'home' } = await paramsPromise
+  const { slug } = await paramsPromise
 
-  if (SKIP_BUILD_STATIC_GENERATION || !slug) {
+  const page = await queryPageByPath(slug)
+
+  if (!page) {
     return {
       title: 'PA Catholic Daughters',
       description: 'Learn about the Pennsylvania Catholic Daughters State Court',
     }
   }
 
-  const page = await queryPageBySlug({
-    slug,
-  })
-
   return generateMeta({ doc: page })
 }
 
 export default async function PageTemplate({ params: paramsPromise }: Args) {
   const { isEnabled: draft } = await draftMode()
-  const { slug = 'home' } = await paramsPromise
+  const { slug } = await paramsPromise
 
-  if (SKIP_BUILD_STATIC_GENERATION) {
-    // Temporarily hide the route completely
-    return notFound()
-  }
-
-  const page = await queryPageBySlug({
-    slug,
-  })
-
-  if (!page) {
-    return notFound()
-  }
-
-  const { hero, layout } = page
+  const page = await queryPageByPath(slug)
 
   if (!page) return notFound()
+
+  const { hero, layout } = page
 
   return (
     <Article>
       {draft && <LivePreviewListener />}
-
       <RenderHero hero={hero} />
       <RenderBlocks blocks={layout} />
     </Article>
