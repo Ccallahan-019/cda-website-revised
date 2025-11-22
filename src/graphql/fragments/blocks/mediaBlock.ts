@@ -32,11 +32,6 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
           value {
             ... on Page {
               slug
-              breadcrumbs {
-                id
-                label
-                url
-              }
             }
             ... on Charity {
               slug

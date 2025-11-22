@@ -14,9 +14,9 @@ export const GET_PAGE_SLUGS = gql`
   }
 `
 
-export const GET_PAGE_BY_PATH = gql`
-  query Page($path: String, $draft: Boolean) {
-    Pages(where: { breadcrumbs__url: { equals: $path } }, draft: $draft, pagination: false) {
+export const GET_PAGE_BY_SLUG = gql`
+  query Page($slug: String, $draft: Boolean) {
+    Pages(where: { slug: { equals: $slug } }, draft: $draft, pagination: false) {
       docs {
         id
         title
@@ -26,45 +26,6 @@ export const GET_PAGE_BY_PATH = gql`
           label
           url
         }
-        hero {
-          ...HighImpactHeroFields
-          ...LowImpactHeroFields
-          ...MediaRightHeroFields
-        }
-        layout {
-          ...ContentBlockFields
-          ...NewsPostsBlockFields
-          ...NewslettersBlockFields
-          ...SliderBlockFields
-          ...StatsBlockFields
-          ...SideBarBlockFields
-          ...CalendarBlockFields
-          ...TabsBlockFields
-          ...ContactCardsBlockFields
-          ...CourtListingBlockFields
-          ...DioceseListingBlockFields
-          ...ArchiveBlockFields
-          ...MediaBlockFields
-          ...BannerBlockFields
-          ...CallToActionBlockFields
-          ...FormBlockFields
-        }
-      }
-    }
-  }
-  ${LAYOUT_FRAGMENTS}
-  ${HIGH_IMPACT_HERO_FRAGMENT}
-  ${LOW_IMPACT_HERO_FRAGMENT}
-  ${MEDIA_RIGHT_HERO_FRAGMENT}
-`
-
-export const GET_PAGE_BY_SLUG = gql`
-  query Page($slug: String, $draft: Boolean) {
-    Pages(where: { slug: { equals: $slug } }, draft: $draft, pagination: false) {
-      docs {
-        id
-        title
-        slug
         hero {
           ...HighImpactHeroFields
           ...LowImpactHeroFields

@@ -23,48 +23,6 @@ type CMSLinkType = {
   onClick?: () => void
 }
 
-const getHrefFromProps = (
-  props: Pick<CMSLinkType, 'type' | 'reference' | 'url'>,
-): string | null => {
-  const { type, reference, url } = props
-
-  if (type === 'custom') return url ?? null
-
-  if (type === 'reference' && reference?.value && typeof reference.value === 'object') {
-    const { relationTo, value } = reference
-
-    // pages use nested docs breadcrumbs URL
-    if (relationTo === 'pages') {
-      const page = value as Page
-
-      const lastCrumb = page.breadcrumbs?.[page.breadcrumbs.length - 1]
-
-      if (lastCrumb?.url) {
-        return lastCrumb.url
-      }
-
-      // if no breadcrumbs, at least use slug
-      if (page.slug) {
-        return page.slug === 'home' ? '/' : `/${page.slug}`
-      }
-
-      return null
-    }
-
-    // Non-page collections
-    const docWithSlug = value as { slug?: string }
-
-    if (docWithSlug.slug) {
-      return `/${relationTo}/${docWithSlug.slug}`
-    }
-
-    return null
-  }
-
-  // Fallback to URL
-  return url ?? null
-}
-
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const {
     type,
@@ -76,7 +34,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     newTab,
     reference,
     url,
-    size = '3',
+    size = '2',
     weight = 'regular',
     linkColor,
     onClick,
@@ -87,7 +45,12 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     secondary: 'amber',
   }
 
-  const href = getHrefFromProps({ type, reference, url })
+  const href =
+    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
+      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
+          reference.value.slug
+        }`
+      : url
 
   if (!href) return null
 
