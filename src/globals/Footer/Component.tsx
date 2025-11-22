@@ -1,4 +1,3 @@
-import { getCachedGlobal } from '@/utilities/getGlobals'
 import React from 'react'
 
 import type { Footer } from '@/payload-types'
@@ -12,9 +11,16 @@ import { Text } from '@/components/UI/RadixComponents/Typography/Text'
 import RichText from '@/components/RichText'
 import { Heading } from '@/components/UI/RadixComponents/Typography/Heading'
 import { SocialMediaIcon } from '@/components/UI/SocialMediaIcon'
+import { getApolloServerClient } from '@/graphql/apolloClient'
+import { GET_FOOTER } from '@/graphql/queries/globals/footer'
 
 export async function Footer() {
-  const footerData: Footer = await getCachedGlobal('footer', 1)()
+  const client = getApolloServerClient()
+  const footer = await client.query({ query: GET_FOOTER })
+
+  const { data } = footer
+
+  const footerData: Footer = data.Footer
 
   const navHeading = footerData?.navHeading
   const navItems = footerData?.navItems || []
