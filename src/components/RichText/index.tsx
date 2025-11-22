@@ -111,27 +111,29 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     return (
       <Spacer>
         <Box pl={`${indent * 24}px`}>
-          <ul className={`${listClass} list-inside`}>{nodesToJSX({ nodes: node.children })}</ul>
+          <ul className={`${listClass} list-outside pl-[1.5rem]`}>
+            {nodesToJSX({ nodes: node.children })}
+          </ul>
         </Box>
       </Spacer>
     )
   },
 
   listitem: ({ node, nodesToJSX }) => {
-    const { checked, indent } = node
+    const { checked } = node
 
     const isChecklistItem = typeof checked === 'boolean'
     const isChecked = checked === true
 
     return (
-      <li className={`pl-[${indent * 24}px]`}>
+      <li>
         {isChecklistItem ? (
           <Flex gap="2" align="center">
             {isChecked ? <CheckIcon color="var(--purple-9)" /> : <SquareIcon />}
-            <Text>{nodesToJSX({ nodes: node.children })}</Text>
+            <Box>{nodesToJSX({ nodes: node.children })}</Box>
           </Flex>
         ) : (
-          <Text>{nodesToJSX({ nodes: node.children })}</Text>
+          <Box>{nodesToJSX({ nodes: node.children })}</Box>
         )}
       </li>
     )
