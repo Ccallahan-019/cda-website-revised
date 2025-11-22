@@ -17,6 +17,11 @@ export const HIGH_IMPACT_HERO_FRAGMENT = gql`
           value {
             ... on Page {
               slug
+              breadcrumbs {
+                id
+                label
+                url
+              }
             }
             ... on Charity {
               slug

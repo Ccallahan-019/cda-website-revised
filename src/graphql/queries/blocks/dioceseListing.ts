@@ -20,6 +20,11 @@ export const GET_ALL_DIOCESES = gql`
             value {
               ... on Page {
                 slug
+                breadcrumbs {
+                  id
+                  label
+                  url
+                }
               }
               ... on Charity {
                 slug

@@ -14,6 +14,11 @@ export const CTA_FRAGMENT = gql`
           value {
             ... on Page {
               slug
+              breadcrumbs {
+                id
+                label
+                url
+              }
             }
             ... on Charity {
               slug

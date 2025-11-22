@@ -17,6 +17,11 @@ export const GET_NEWS_POSTS = gql`
               value {
                 ... on Page {
                   slug
+                  breadcrumbs {
+                    id
+                    label
+                    url
+                  }
                 }
                 ... on Charity {
                   slug

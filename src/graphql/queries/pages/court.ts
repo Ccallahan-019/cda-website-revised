@@ -29,6 +29,11 @@ export const GET_COURT_BY_SLUG = gql`
             value {
               ... on Page {
                 slug
+                breadcrumbs {
+                  id
+                  label
+                  url
+                }
               }
               ... on Charity {
                 slug
