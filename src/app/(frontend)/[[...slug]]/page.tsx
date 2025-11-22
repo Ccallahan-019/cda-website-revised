@@ -1,14 +1,12 @@
 import { notFound } from 'next/navigation'
-import { getApolloServerClient } from '@/graphql/apolloClient'
-import { GET_PAGE_BY_SLUG, GET_PAGE_BY_PATH } from '@/graphql/queries/pages/page'
+import { queryPageByPathStatic } from '@/utilities/fetch-page'
 import { RenderBlocks } from '@/blocks/RenderBlocks'
 import { RenderHero } from '@/heros/RenderHero'
-import { cookies, draftMode } from 'next/headers'
-import { LivePreviewListener } from '@/components/LivePreviewListener'
-import { GET_PAGE_SLUGS } from '@/graphql/queries/pages/page'
 import { Article } from '@/components/UI/RadixComponents/Layout/Article'
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import { generateMeta } from '@/utilities/generateMeta'
+import { getApolloServerClient } from '@/graphql/apolloClient'
+import { GET_PAGE_SLUGS } from '@/graphql/queries/pages/page'
 import { Document } from 'payload'
 
 export const revalidate = 3600
@@ -18,11 +16,6 @@ type Args = {
   params: Promise<{
     slug?: string[]
   }>
-}
-
-const buildPathFromSegments = (segments?: string[]) => {
-  if (!segments || segments.length === 0) return '/'
-  return `/${segments.join('/')}`
 }
 
 export async function generateStaticParams() {
@@ -46,45 +39,9 @@ export async function generateStaticParams() {
   return params
 }
 
-const queryPageByPath = async (segments?: string[]) => {
-  const { isEnabled: draft } = await draftMode()
-  const cookieStore = await cookies()
-  const token = draft ? cookieStore.get('payload-token')?.value : undefined
-  const client = getApolloServerClient(token)
-
-  const path = buildPathFromSegments(segments)
-
-  if (path === '/') {
-    const { data } = await client.query({
-      query: GET_PAGE_BY_SLUG,
-      variables: { slug: 'home', draft },
-    })
-    return data.Pages.docs[0] || null
-  }
-
-  if (segments && segments.length === 1) {
-    const { data } = await client.query({
-      query: GET_PAGE_BY_SLUG,
-      variables: { slug: segments[0], draft },
-    })
-    return data.Pages.docs[0] || null
-  }
-
-  const { data } = await client.query({
-    query: GET_PAGE_BY_PATH,
-    variables: {
-      path,
-      draft,
-    },
-  })
-
-  return data.Pages.docs[0] || null
-}
-
 export async function generateMetadata({ params: paramsPromise }: Args): Promise<Metadata> {
   const { slug } = await paramsPromise
-
-  const page = await queryPageByPath(slug)
+  const page = await queryPageByPathStatic(slug)
 
   if (!page) {
     return {
@@ -97,10 +54,8 @@ export async function generateMetadata({ params: paramsPromise }: Args): Promise
 }
 
 export default async function PageTemplate({ params: paramsPromise }: Args) {
-  const { isEnabled: draft } = await draftMode()
   const { slug } = await paramsPromise
-
-  const page = await queryPageByPath(slug)
+  const page = await queryPageByPathStatic(slug)
 
   if (!page) return notFound()
 
@@ -108,7 +63,6 @@ export default async function PageTemplate({ params: paramsPromise }: Args) {
 
   return (
     <Article>
-      {draft && <LivePreviewListener />}
       <RenderHero breadcrumbs={breadcrumbs} hero={hero} />
       <RenderBlocks blocks={layout} />
     </Article>
