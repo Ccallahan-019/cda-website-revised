@@ -104,12 +104,12 @@ export default async function PageTemplate({ params: paramsPromise }: Args) {
 
   if (!page) return notFound()
 
-  const { hero, layout } = page
+  const { hero, layout, breadcrumbs } = page
 
   return (
     <Article>
       {draft && <LivePreviewListener />}
-      <RenderHero hero={hero} />
+      <RenderHero breadcrumbs={breadcrumbs} hero={hero} />
       <RenderBlocks blocks={layout} />
     </Article>
   )

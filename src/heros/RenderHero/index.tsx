@@ -14,8 +14,8 @@ const heroComponents = {
 
 export const RenderHero: React.FC<{
   hero: Page['hero']
-}> = (props) => {
-  const { hero: heroes } = props
+  breadcrumbs?: Page['breadcrumbs']
+}> = ({ hero: heroes, breadcrumbs }) => {
   const hasHero = Array.isArray(heroes) && heroes.length === 1
 
   if (hasHero) {
@@ -30,7 +30,7 @@ export const RenderHero: React.FC<{
         return (
           <Fragment>
             {/* @ts-expect-error there may be some mismatch between the expected types here */}
-            <Hero {...hero} />
+            <Hero breadcrumbs={breadcrumbs} {...hero} />
           </Fragment>
         )
       }
