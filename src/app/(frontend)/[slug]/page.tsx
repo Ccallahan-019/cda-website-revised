@@ -74,7 +74,7 @@ export default async function PageTemplate({ params: paramsPromise }: Args) {
     return notFound()
   }
 
-  const { hero, layout, breadcrumbs } = page
+  const { hero, layout } = page
 
   if (!page) return notFound()
 
@@ -82,7 +82,7 @@ export default async function PageTemplate({ params: paramsPromise }: Args) {
     <Article>
       {draft && <LivePreviewListener />}
 
-      <RenderHero breadcrumbs={breadcrumbs} hero={hero} />
+      <RenderHero hero={hero} />
       <RenderBlocks blocks={layout} />
     </Article>
   )

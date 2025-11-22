@@ -16,11 +16,6 @@ export const GET_HEADER = gql`
                 value {
                   ... on Page {
                     slug
-                    breadcrumbs {
-                      id
-                      label
-                      url
-                    }
                   }
                   ... on Charity {
                     slug
@@ -53,11 +48,6 @@ export const GET_HEADER = gql`
             value {
               ... on Page {
                 slug
-                breadcrumbs {
-                  id
-                  label
-                  url
-                }
               }
               ... on Charity {
                 slug
@@ -90,11 +80,6 @@ export const GET_HEADER = gql`
             value {
               ... on Page {
                 slug
-                breadcrumbs {
-                  id
-                  label
-                  url
-                }
               }
               ... on Charity {
                 slug

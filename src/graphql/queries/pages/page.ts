@@ -21,11 +21,6 @@ export const GET_PAGE_BY_SLUG = gql`
         id
         title
         slug
-        breadcrumbs {
-          id
-          label
-          url
-        }
         hero {
           ...HighImpactHeroFields
           ...LowImpactHeroFields

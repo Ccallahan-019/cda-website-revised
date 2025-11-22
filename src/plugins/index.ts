@@ -3,7 +3,6 @@ import { fields, formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { redirectsPlugin } from '@payloadcms/plugin-redirects'
 import { seoPlugin } from '@payloadcms/plugin-seo'
 import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
-import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 
 import { Plugin } from 'payload'
 import { revalidateRedirects } from '@/hooks/revalidateRedirects'
@@ -59,10 +58,6 @@ export const plugins: Plugin[] = [
     token: process.env.BLOB_READ_WRITE_TOKEN,
     clientUploads: true,
     addRandomSuffix: true,
-  }),
-  nestedDocsPlugin({
-    collections: ['pages'],
-    generateURL: (docs) => docs.reduce((url, doc) => `${url}/${doc.slug}`, ''),
   }),
   formBuilderPlugin({
     fields: {

@@ -13,11 +13,6 @@ export const GET_FOOTER = gql`
             value {
               ... on Page {
                 slug
-                breadcrumbs {
-                  id
-                  label
-                  url
-                }
               }
               ... on Charity {
                 slug
