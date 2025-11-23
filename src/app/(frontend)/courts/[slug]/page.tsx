@@ -149,7 +149,7 @@ export default async function CourtTemplate({ params: paramsPromise }: Args) {
                     {diocese && typeof diocese === 'object' && <Text>{diocese.name}</Text>}
                     {((location && location.city) ||
                       (instituted && formatDateTime(instituted))) && (
-                      <DataList.Root size="2">
+                      <DataList.Root size={{ initial: '2', xs: '3' }}>
                         {location && location.city && (
                           <DataList.Item>
                             <DataList.Label color="purple">Location</DataList.Label>
