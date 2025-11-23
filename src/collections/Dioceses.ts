@@ -74,7 +74,7 @@ export const Dioceses: CollectionConfig = {
               filterOptions: deputiesQuery,
               admin: {
                 description:
-                  'This field has been pre-filtered to only show contacts that have designated as a District Deputy in the "Positions" field.',
+                  'This field has been pre-filtered to only show contacts that have been designated as a District Deputy in the "Positions" field.',
               },
             },
           ],
