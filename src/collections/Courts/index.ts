@@ -148,7 +148,7 @@ export const Courts: CollectionConfig = {
               type: 'group',
               admin: {
                 description:
-                  "These fields have been pre-filtered to only include contacts whose 'type' is 'local'.",
+                  "These fields have been pre-filtered to only include officers whose 'type' includes 'local'.",
               },
               fields: [
                 {
