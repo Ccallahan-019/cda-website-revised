@@ -248,6 +248,10 @@ export interface HighImpactHero {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -273,21 +277,6 @@ export interface HighImpactHero {
 export interface Media {
   id: number;
   alt?: string | null;
-  caption?: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  } | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -436,6 +425,10 @@ export interface Court {
       | ({
           relationTo: 'courts';
           value: number | Court;
+        } | null)
+      | ({
+          relationTo: 'media';
+          value: number | Media;
         } | null);
     /**
      * This must be the full website URL (i.e. https://www.some-website.com)
@@ -456,7 +449,7 @@ export interface Court {
   phoneNumber?: string | null;
   contactEmail?: string | null;
   /**
-   * These fields have been pre-filtered to only include contacts whose 'type' is 'local'.
+   * These fields have been pre-filtered to only include officers whose 'type' includes 'local'.
    */
   officers?: {
     regent?: (number | null) | Contact;
@@ -534,6 +527,10 @@ export interface Diocese {
       | ({
           relationTo: 'courts';
           value: number | Court;
+        } | null)
+      | ({
+          relationTo: 'media';
+          value: number | Media;
         } | null);
     /**
      * This must be the full website URL (i.e. https://www.some-website.com)
@@ -548,7 +545,7 @@ export interface Diocese {
   };
   phoneNumber?: string | null;
   /**
-   * This field has been pre-filtered to only show contacts that have designated as a District Deputy in the "Positions" field.
+   * This field has been pre-filtered to only show contacts that have been designated as a District Deputy in the "Positions" field.
    */
   deputies?: (number | Contact)[] | null;
   info?: {
@@ -814,6 +811,10 @@ export interface MediaRightHero {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -884,6 +885,10 @@ export interface ContentBlock {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -972,6 +977,10 @@ export interface NewsPost {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -1064,6 +1073,10 @@ export interface SliderBlock {
               | ({
                   relationTo: 'courts';
                   value: number | Court;
+                } | null)
+              | ({
+                  relationTo: 'media';
+                  value: number | Media;
                 } | null);
             /**
              * This must be the full website URL (i.e. https://www.some-website.com)
@@ -1390,6 +1403,10 @@ export interface MediaBlock {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -1491,6 +1508,10 @@ export interface CallToActionBlock {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -1741,6 +1762,13 @@ export interface User {
   hash?: string | null;
   loginAttempts?: number | null;
   lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
   password?: string | null;
 }
 /**
@@ -2393,7 +2421,6 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
-  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -2495,6 +2522,13 @@ export interface UsersSelect<T extends boolean = true> {
   hash?: T;
   loginAttempts?: T;
   lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -3035,6 +3069,10 @@ export interface Header {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -3076,6 +3114,10 @@ export interface Header {
                         | ({
                             relationTo: 'courts';
                             value: number | Court;
+                          } | null)
+                        | ({
+                            relationTo: 'media';
+                            value: number | Media;
                           } | null);
                       /**
                        * This must be the full website URL (i.e. https://www.some-website.com)
@@ -3122,6 +3164,10 @@ export interface Header {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)
@@ -3177,6 +3223,10 @@ export interface Footer {
             | ({
                 relationTo: 'courts';
                 value: number | Court;
+              } | null)
+            | ({
+                relationTo: 'media';
+                value: number | Media;
               } | null);
           /**
            * This must be the full website URL (i.e. https://www.some-website.com)

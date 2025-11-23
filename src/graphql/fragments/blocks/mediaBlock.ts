@@ -11,7 +11,6 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
       url
       width
       height
-      caption
     }
     galleryMedia {
       id
@@ -19,7 +18,6 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
       url
       width
       height
-      caption
     }
     mediaAlignment
     content
@@ -47,6 +45,9 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
             }
             ... on Court {
               slug
+            }
+            ... on Media {
+              url
             }
           }
         }
