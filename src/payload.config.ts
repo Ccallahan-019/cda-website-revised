@@ -32,6 +32,7 @@ import { Events } from './collections/Events'
 import { Fundraisers } from './collections/Fundraisers/config'
 import { Projects } from './collections/Projects/config'
 import { Charities } from './collections/Charities/config'
+import { generatePreviewPath } from './utilities/generatePreviewPath'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -55,6 +56,16 @@ export default buildConfig({
     },
     user: Users.slug,
     livePreview: {
+      url: ({ data, collectionConfig, req }) => {
+        const path = generatePreviewPath({
+          slug: typeof data?.slug === 'string' ? data.slug : '',
+          collection: collectionConfig && collectionConfig.slug ? collectionConfig.slug : 'pages',
+          req,
+        })
+
+        return path
+      },
+      collections: ['pages', 'charities', 'courts', 'events', 'fundraisers', 'projects'],
       breakpoints: [
         {
           label: 'Mobile',
