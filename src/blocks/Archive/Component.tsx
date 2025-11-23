@@ -4,7 +4,9 @@ import { Container } from '@/components/UI/RadixComponents/Layout/Container'
 import { getApolloServerClient } from '@/graphql/apolloClient'
 import {
   GET_CHARITIES,
-  GET_EVENTS,
+  GET_ALL_EVENTS,
+  GET_PAST_EVENTS,
+  GET_FUTURE_EVENTS,
   GET_FUNDRAISERS,
   GET_PROJECTS,
 } from '@/graphql/queries/blocks/archive'
@@ -30,6 +32,7 @@ export const ArchiveBlock: React.FC<
     itemsPerPage,
     populateBy,
     relationTo,
+    eventTimeframe,
     selectedDocs,
     type,
   } = props
@@ -43,9 +46,20 @@ export const ArchiveBlock: React.FC<
 
     switch (relationTo) {
       case 'events': {
+        const date = new Date()
         const { data: eventData } = await client.query({
-          query: GET_EVENTS,
-          variables: { type, limit, sortKey: '-dates.startDate' },
+          query:
+            eventTimeframe !== 'past'
+              ? eventTimeframe !== 'future'
+                ? GET_ALL_EVENTS
+                : GET_FUTURE_EVENTS
+              : GET_PAST_EVENTS,
+          variables: {
+            type,
+            limit,
+            date,
+            sortKey: eventTimeframe === 'future' ? 'dates.startDate' : '-dates.startDate',
+          },
         })
         const eventDocs: Event[] = eventData.Events.docs ?? []
         if (eventDocs.length) docs = eventDocs

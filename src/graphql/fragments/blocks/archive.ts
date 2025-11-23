@@ -7,6 +7,7 @@ export const ARCHIVE_FRAGMENT = gql`
     introContent
     populateBy
     relationTo
+    eventTimeframe
     type
     limit
     pagination
