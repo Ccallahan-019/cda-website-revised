@@ -131,7 +131,7 @@ export const FormBlock: React.FC<
             <RichText data={introContent} enableGutter={false} />
           </Box>
         )}
-        <Card size="4">
+        <Card size="3">
           <FormProvider {...formMethods}>
             {!isLoading && hasSubmitted && confirmationType === 'message' && (
               <RichText data={confirmationMessage} />
