@@ -24,8 +24,8 @@ export const AccordianDropdownClient: React.FC<{ courts?: Court[] } & Diocese> =
   return (
     <Box>
       <Flex
-        py="6"
-        px="4"
+        py={{ initial: '5', xs: '6' }}
+        px={{ initial: '3', xs: '4' }}
         align="center"
         justify="between"
         width="100%"
