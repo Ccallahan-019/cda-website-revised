@@ -45,7 +45,7 @@ export const ArchiveBlock: React.FC<
       case 'events': {
         const { data: eventData } = await client.query({
           query: GET_EVENTS,
-          variables: { type, limit },
+          variables: { type, limit, sortKey: '-dates.startDate' },
         })
         const eventDocs: Event[] = eventData.Events.docs ?? []
         if (eventDocs.length) docs = eventDocs
