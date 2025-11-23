@@ -35,9 +35,6 @@ export const MediaBlock: React.FC<
 
   let component: JSX.Element | null = null
 
-  let caption
-  if (media && typeof media === 'object') caption = media.caption
-
   switch (contentType) {
     case 'media':
       component = (
@@ -53,11 +50,6 @@ export const MediaBlock: React.FC<
                 />
               </Inset>
             </Card>
-          )}
-          {caption && (
-            <Box maxWidth="48rem">
-              <RichText data={caption} />
-            </Box>
           )}
         </Flex>
       )
@@ -81,11 +73,6 @@ export const MediaBlock: React.FC<
                   <Media resource={media} imgClassName="w-full h-auto" priority />
                 </Inset>
               </Card>
-              {caption && (
-                <Box maxWidth="48rem">
-                  <RichText data={caption} />
-                </Box>
-              )}
             </Flex>
           </Flex>
           <Flex
