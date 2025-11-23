@@ -14,7 +14,7 @@ export const CourtHero: React.FC<{ court: Court }> = ({ court }) => {
 
   return (
     <Section>
-      <Container mt={headerHeight}>
+      <Container mt={headerHeight} pt={{ initial: '3', sm: '5' }}>
         <Flex direction="column" gap="4" maxWidth="48rem">
           <Heading
             as="h6"

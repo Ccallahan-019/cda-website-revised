@@ -15,7 +15,7 @@ export const ProjectHero: React.FC<{ project: Project }> = ({ project }) => {
   return (
     <Section>
       {/* adjust padding if header size changes */}
-      <Container mt={headerHeight}>
+      <Container mt={headerHeight} pt={{ initial: '3', sm: '5' }}>
         <Flex direction="column" gap="4" maxWidth="48rem">
           <Heading
             as="h6"
