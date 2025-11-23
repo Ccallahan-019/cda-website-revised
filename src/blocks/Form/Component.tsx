@@ -166,7 +166,7 @@ export const FormBlock: React.FC<
                   </Flex>
 
                   <Button
-                    color="yellow"
+                    color="amber"
                     form={formID}
                     type="submit"
                     disabled={isLoading && !hasSubmitted}
