@@ -20,7 +20,7 @@ export const CharityHero: React.FC<{ charity: Charity }> = ({ charity }) => {
             as="h6"
             weight="regular"
             style={{ textTransform: 'uppercase' }}
-          >{`${type} Project`}</Heading>
+          >{`${type} Charity`}</Heading>
           <Heading as="h1">{name}</Heading>
           {formatDateTime(updatedAt) && (
             <Flex direction="column" gap="1">
