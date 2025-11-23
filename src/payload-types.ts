@@ -277,6 +277,7 @@ export interface HighImpactHero {
 export interface Media {
   id: number;
   alt?: string | null;
+  caption?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -1354,6 +1355,7 @@ export interface ArchiveBlock {
 export interface MediaBlock {
   contentType: 'media' | 'gallery' | 'withText';
   media?: (number | null) | Media;
+  includeCaption?: boolean | null;
   /**
    * The ideal ratio for these media files is 16 / 9. Media with vastly different ratios will be cropped heavily in order to fit within the gallery.
    */
@@ -2347,6 +2349,7 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
 export interface MediaBlockSelect<T extends boolean = true> {
   contentType?: T;
   media?: T;
+  includeCaption?: T;
   galleryMedia?: T;
   mediaAlignment?: T;
   content?: T;
@@ -2423,6 +2426,7 @@ export interface FormBlockSelect<T extends boolean = true> {
  */
 export interface MediaSelect<T extends boolean = true> {
   alt?: T;
+  caption?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;

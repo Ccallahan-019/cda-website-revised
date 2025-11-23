@@ -11,6 +11,7 @@ import { StaticImageData } from 'next/image'
 import React, { JSX } from 'react'
 import { Autoplay, Pagination } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
+import { Text } from '@/components/UI/RadixComponents/Typography/Text'
 
 export const MediaBlock: React.FC<
   MediaBlockProps & {
@@ -30,15 +31,17 @@ export const MediaBlock: React.FC<
     looping,
     imgClassName,
     staticImage,
+    includeCaption,
     enableGutter = true,
   } = props
 
   let component: JSX.Element | null = null
+  const caption = media && typeof media === 'object' ? media.caption : undefined
 
   switch (contentType) {
     case 'media':
       component = (
-        <Flex direction="column" gap="4" maxWidth="48rem" mx="auto">
+        <Flex direction="column" gap="2" maxWidth="48rem" mx="auto">
           {(media || staticImage) && (
             <Card>
               <Inset side="all">
@@ -50,6 +53,11 @@ export const MediaBlock: React.FC<
                 />
               </Inset>
             </Card>
+          )}
+          {caption && includeCaption && (
+            <Text size="2" color="gray">
+              {caption}
+            </Text>
           )}
         </Flex>
       )
@@ -67,12 +75,17 @@ export const MediaBlock: React.FC<
             direction="column"
             justify="center"
           >
-            <Flex direction="column" gap="3">
+            <Flex direction="column" gap="2">
               <Card>
                 <Inset side="all">
                   <Media resource={media} imgClassName="w-full h-auto" priority />
                 </Inset>
               </Card>
+              {caption && includeCaption && (
+                <Text size="2" color="gray">
+                  {caption}
+                </Text>
+              )}
             </Flex>
           </Flex>
           <Flex

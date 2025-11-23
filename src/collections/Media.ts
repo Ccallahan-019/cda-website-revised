@@ -22,6 +22,10 @@ export const Media: CollectionConfig = {
       name: 'alt',
       type: 'text',
     },
+    {
+      name: 'caption',
+      type: 'text',
+    },
   ],
   upload: {
     staticDir: path.resolve(dirname, '../../public/media'),

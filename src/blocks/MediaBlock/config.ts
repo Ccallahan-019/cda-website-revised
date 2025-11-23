@@ -28,6 +28,15 @@ export const MediaBlock: Block = {
       },
     },
     {
+      name: 'includeCaption',
+      type: 'checkbox',
+      defaultValue: true,
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData.contentType === 'media' || siblingData.contentType === 'withText',
+      },
+    },
+    {
       name: 'galleryMedia',
       type: 'relationship',
       relationTo: 'media',

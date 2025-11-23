@@ -11,6 +11,7 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
       url
       width
       height
+      caption
     }
     galleryMedia {
       id
@@ -19,6 +20,7 @@ export const MEDIA_BLOCK_FRAGMENT = gql`
       width
       height
     }
+    includeCaption
     mediaAlignment
     content
     links {
