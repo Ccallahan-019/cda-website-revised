@@ -29,7 +29,7 @@ export const AccordianDropdownClient: React.FC<{ courts?: Court[] } & Diocese> =
         align="center"
         justify="between"
         width="100%"
-        style={{ cursor: 'pointer', backgroundColor: 'var(--accent-2)' }}
+        style={{ cursor: 'pointer', backgroundColor: 'var(--accent-3)' }}
         asChild
       >
         <button onClick={toggleExpanded}>
