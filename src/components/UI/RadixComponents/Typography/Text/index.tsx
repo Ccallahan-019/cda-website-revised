@@ -4,7 +4,7 @@ export const Text: React.FC<TextProps> = ({ size, wrap, weight, ...props }) => {
   return (
     <RadixText
       wrap={wrap ? wrap : 'pretty'}
-      size={size ? size : { initial: '2', xs: '3' }}
+      size={size ? size : { initial: '2', md: '3' }}
       weight={weight ? weight : 'regular'}
       {...props}
     />
