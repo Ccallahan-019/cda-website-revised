@@ -11,7 +11,7 @@ export const LowImpactHero: React.FC<LowImpactHeroProps> = ({ richText }) => {
   return (
     <Section>
       {/* adjust padding if header size changes */}
-      <Container mt={headerHeight}>
+      <Container mt={headerHeight} pt={{ initial: '2', sm: '3', md: '4', lg: '5' }}>
         <Box maxWidth="56rem">{richText && <RichText data={richText} enableGutter={false} />}</Box>
       </Container>
     </Section>
