@@ -17,15 +17,13 @@ export const CallToActionBlock: React.FC<Props> = ({ ctaLinks, richText, enableG
   const component = (
     <Card size={{ md: '3' }}>
       <Flex
-        direction={{ initial: 'column', md: 'row' }}
-        justify={{ md: 'between' }}
-        align={{ md: 'center' }}
-        gap="4"
+        direction={{ initial: 'column', sm: 'row' }}
+        justify={{ sm: 'between' }}
+        align={{ sm: 'center' }}
+        gap="3"
       >
-        <Flex maxWidth="40rem" align="center">
-          {richText && <RichText data={richText} />}
-        </Flex>
-        <Flex direction="column" gap="4">
+        <Flex align="center">{richText && <RichText data={richText} />}</Flex>
+        <Flex direction="column" gap="4" flexShrink="0">
           {(ctaLinks || []).map(({ link }, i) => {
             return <CMSLink key={i} size="2" {...link} />
           })}
