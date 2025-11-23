@@ -1315,6 +1315,7 @@ export interface ArchiveBlock {
   } | null;
   populateBy?: ('collection' | 'selection') | null;
   relationTo?: ('events' | 'fundraisers' | 'projects' | 'charities') | null;
+  eventTimeframe?: ('past' | 'future' | 'all') | null;
   selectedDocs?:
     | (
         | {
@@ -2330,6 +2331,7 @@ export interface ArchiveBlockSelect<T extends boolean = true> {
   introContent?: T;
   populateBy?: T;
   relationTo?: T;
+  eventTimeframe?: T;
   selectedDocs?: T;
   type?: T;
   limit?: T;

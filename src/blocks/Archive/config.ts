@@ -69,6 +69,20 @@ export const Archive: Block = {
       ],
     },
     {
+      name: 'eventTimeframe',
+      type: 'radio',
+      options: [
+        { label: 'Past Events', value: 'past' },
+        { label: 'Future Events', value: 'future' },
+        { label: 'All Events', value: 'all' },
+      ],
+      defaultValue: 'all',
+      admin: {
+        condition: (_, siblingData) =>
+          siblingData.populateBy === 'collection' && siblingData.relationTo === 'events',
+      },
+    },
+    {
       name: 'selectedDocs',
       type: 'relationship',
       admin: {
