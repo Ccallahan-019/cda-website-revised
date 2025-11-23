@@ -34,11 +34,7 @@ const ArchiveGrid: React.FC<{
   relationTo?: 'events' | 'fundraisers' | 'projects' | 'charities' | null
 }> = ({ docs, relationTo }) => {
   return (
-    <Grid
-      columns={{ initial: '4', sm: '8', lg: '12' }}
-      gapX={{ initial: '4', lg: '6', xl: '8' }}
-      gapY={{ initial: '4', lg: '6' }}
-    >
+    <Grid columns={{ initial: '4', sm: '8', lg: '12' }} gap="5">
       {docs.map((result, index) => {
         if ('relationTo' in result) {
           return (
@@ -62,7 +58,7 @@ export const CollectionArchive: React.FC<Props> = ({
   docs,
   relationTo,
   pagination = true,
-  itemsPerPage = 3,
+  itemsPerPage = 6,
 }) => {
   if (pagination) {
     return (
