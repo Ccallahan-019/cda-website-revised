@@ -80,7 +80,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
 
     return (
       <Spacer>
-        <Box pl={`${indent * 24}px`} py="2">
+        <Box pl={`${indent * 24}px`}>
           <Heading as={tag}>{nodesToJSX({ nodes: node.children })}</Heading>
         </Box>
       </Spacer>
