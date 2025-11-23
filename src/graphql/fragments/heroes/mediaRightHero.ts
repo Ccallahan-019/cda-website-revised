@@ -32,6 +32,9 @@ export const MEDIA_RIGHT_HERO_FRAGMENT = gql`
             ... on Court {
               slug
             }
+            ... on Media {
+              url
+            }
           }
         }
         url

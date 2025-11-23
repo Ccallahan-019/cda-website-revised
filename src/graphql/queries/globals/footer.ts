@@ -29,6 +29,9 @@ export const GET_FOOTER = gql`
               ... on Court {
                 slug
               }
+              ... on Media {
+                url
+              }
             }
           }
           url

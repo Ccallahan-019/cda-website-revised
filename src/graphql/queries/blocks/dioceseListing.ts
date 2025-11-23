@@ -36,6 +36,9 @@ export const GET_ALL_DIOCESES = gql`
               ... on Court {
                 slug
               }
+              ... on Media {
+                url
+              }
             }
           }
           url

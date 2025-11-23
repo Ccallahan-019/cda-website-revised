@@ -2,7 +2,7 @@ import React from 'react'
 import { Button, ButtonProps, Flex, LinkProps } from '@radix-ui/themes'
 import { Link } from '../UI/RadixComponents/Typography/Link'
 
-import type { Page, Charity, Event, Fundraiser, Project, Court } from '@/payload-types'
+import type { Page, Charity, Event, Fundraiser, Project, Court, Media } from '@/payload-types'
 
 type CMSLinkType = {
   appearance?: 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive' | null
@@ -12,8 +12,8 @@ type CMSLinkType = {
   label?: string | null
   newTab?: boolean | null
   reference?: {
-    relationTo: 'pages' | 'charities' | 'events' | 'fundraisers' | 'projects' | 'courts'
-    value: Page | Charity | Event | Fundraiser | Project | Court | string | number
+    relationTo: 'pages' | 'charities' | 'events' | 'fundraisers' | 'projects' | 'courts' | 'media'
+    value: Page | Charity | Event | Fundraiser | Project | Court | Media | string | number
   } | null
   type?: 'custom' | 'reference' | null
   url?: string | null
@@ -45,12 +45,21 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     secondary: 'amber',
   }
 
-  const href =
-    type === 'reference' && typeof reference?.value === 'object' && reference.value.slug
-      ? `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-          reference.value.slug
-        }`
-      : url
+  let href: string | null | undefined = undefined
+
+  if (type === 'reference' && typeof reference?.value === 'object') {
+    if ('slug' in reference.value && reference?.value.slug) {
+      href = `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
+        reference.value.slug
+      }`
+    } else if ('url' in reference?.value && reference?.value.url) {
+      href = `${reference?.value.url}`
+    } else {
+      href = url
+    }
+  } else {
+    href = url
+  }
 
   if (!href) return null
 

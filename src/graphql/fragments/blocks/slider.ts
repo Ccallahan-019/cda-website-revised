@@ -37,6 +37,9 @@ export const SLIDER_FRAGMENT = gql`
               ... on Court {
                 slug
               }
+              ... on Media {
+                url
+              }
             }
           }
           url

@@ -45,6 +45,9 @@ export const GET_COURT_BY_SLUG = gql`
               ... on Court {
                 slug
               }
+              ... on Media {
+                url
+              }
             }
           }
           url

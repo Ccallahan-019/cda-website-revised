@@ -32,6 +32,9 @@ export const GET_HEADER = gql`
                   ... on Court {
                     slug
                   }
+                  ... on Media {
+                    url
+                  }
                 }
               }
               url

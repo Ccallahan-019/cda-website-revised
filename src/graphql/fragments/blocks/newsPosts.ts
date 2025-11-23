@@ -38,6 +38,9 @@ export const NEWS_POSTS_FRAGMENT = gql`
               ... on Court {
                 slug
               }
+              ... on Media {
+                url
+              }
             }
           }
           url

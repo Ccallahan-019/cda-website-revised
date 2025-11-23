@@ -33,6 +33,9 @@ export const HIGH_IMPACT_HERO_FRAGMENT = gql`
             ... on Court {
               slug
             }
+            ... on Media {
+              url
+            }
           }
         }
         url

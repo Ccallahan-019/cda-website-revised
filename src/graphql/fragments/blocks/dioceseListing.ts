@@ -39,6 +39,9 @@ export const DIOCESE_LISTING_FRAGMENT = gql`
             ... on Court {
               slug
             }
+            ... on Media {
+              url
+            }
           }
         }
         url

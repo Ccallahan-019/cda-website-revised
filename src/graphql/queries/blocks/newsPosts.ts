@@ -33,6 +33,9 @@ export const GET_NEWS_POSTS = gql`
                 ... on Court {
                   slug
                 }
+                ... on Media {
+                  url
+                }
               }
             }
             url
