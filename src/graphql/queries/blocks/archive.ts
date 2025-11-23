@@ -1,8 +1,14 @@
 import { gql } from '@apollo/client'
 
 export const GET_EVENTS = gql`
-  query Events($type: Event_type_Input, $limit: Int) {
-    Events(where: { type: { equals: $type } }, limit: $limit, draft: false, pagination: false) {
+  query Events($type: Event_type_Input, $limit: Int, $sortKey: String) {
+    Events(
+      where: { type: { equals: $type } }
+      limit: $limit
+      draft: false
+      pagination: false
+      sort: $sortKey
+    ) {
       docs {
         id
         slug
