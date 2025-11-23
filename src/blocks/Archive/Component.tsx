@@ -107,7 +107,7 @@ export const ArchiveBlock: React.FC<
           docs={docs}
           relationTo={relationTo}
           pagination={pagination != null ? pagination : false}
-          itemsPerPage={itemsPerPage != null ? itemsPerPage : 3}
+          itemsPerPage={itemsPerPage != null ? itemsPerPage : 6}
         />
       </Flex>
     </Container>

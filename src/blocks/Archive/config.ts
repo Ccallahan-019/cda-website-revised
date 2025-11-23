@@ -109,11 +109,11 @@ export const Archive: Block = {
     {
       name: 'itemsPerPage',
       type: 'number',
-      defaultValue: 3,
+      defaultValue: 6,
       admin: {
         condition: (_, siblingData) => siblingData.pagination === true,
         description:
-          'Choose how many items are shown on each page. If a number is not given, it will default to 3.',
+          'Choose how many items are shown on each page. If a number is not given, it will default to 6.',
       },
     },
   ],
