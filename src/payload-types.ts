@@ -1339,7 +1339,7 @@ export interface ArchiveBlock {
   limit?: number | null;
   pagination?: boolean | null;
   /**
-   * Choose how many items are shown on each page. If a number is not given, it will default to 3.
+   * Choose how many items are shown on each page. If a number is not given, it will default to 6.
    */
   itemsPerPage?: number | null;
   id?: string | null;
