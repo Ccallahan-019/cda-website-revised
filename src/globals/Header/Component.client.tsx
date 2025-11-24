@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 import type { Header as HeaderProps } from '@/payload-types'
 import { Box, Flex, IconButton } from '@radix-ui/themes'
-import { Link } from '@/components/UI/RadixComponents/Typography/Link'
+import { Link } from '@/components/UI/RadixComponents/Typography/Links'
 import { HeaderNav } from './Nav'
 import { Logo } from '@/components/Logo/Logo'
 
