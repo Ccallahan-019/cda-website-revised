@@ -65,6 +65,7 @@ export const GET_COURT_BY_SLUG = gql`
         officers {
           regent {
             name
+            email
           }
           viceRegent {
             name

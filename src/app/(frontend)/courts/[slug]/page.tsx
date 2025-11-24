@@ -178,12 +178,21 @@ export default async function CourtTemplate({ params: paramsPromise }: Args) {
                             <DataList.Value>{phoneNumber}</DataList.Value>
                           </DataList.Item>
                         )}
-                        {contactEmail && contactEmail.length > 0 && (
+                        {contactEmail && contactEmail.length > 0 ? (
                           <DataList.Item>
                             <DataList.Label color="purple">Contact Email</DataList.Label>
                             <DataList.Value>{contactEmail}</DataList.Value>
                           </DataList.Item>
-                        )}
+                        ) : officers &&
+                          officers.regent &&
+                          typeof officers.regent === 'object' &&
+                          officers.regent.email &&
+                          officers.regent.email.length > 0 ? (
+                          <DataList.Item>
+                            <DataList.Label color="purple">Contact Email</DataList.Label>
+                            <DataList.Value>{officers.regent.email}</DataList.Value>
+                          </DataList.Item>
+                        ) : null}
                       </DataList.Root>
                     )}
                   </Flex>
