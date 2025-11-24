@@ -38,6 +38,16 @@
   --font-weight-regular: 500;
   --font-weight-medium: 600;
   --font-weight-bold: 700;
+
+  --cursor-button: pointer;
+  --cursor-checkbox: pointer;
+  --cursor-disabled: default;
+  --cursor-link: pointer;
+  --cursor-menu-item: pointer;
+  --cursor-radio: pointer;
+  --cursor-slider-thumb: grab;
+  --cursor-slider-thumb-active: grabbing;
+  --cursor-switch: pointer;
 }
 
 :where(.radix-themes) {
