@@ -161,7 +161,7 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
         {children}
         {newTab && (
           <ExternalLinkIcon
-            style={{ display: 'inline', paddingLeft: '1px', verticalAlign: 'top' }}
+            style={{ display: 'inline', paddingLeft: '2px', verticalAlign: 'top' }}
             size={14}
           />
         )}
