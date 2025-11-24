@@ -68,7 +68,13 @@ export async function Footer() {
                   {navHeading}
                 </Heading>
               )}
-              <Flex asChild direction="column" gap="2" align={{ md: 'end' }} pr={{ md: '1' }}>
+              <Flex
+                asChild
+                direction="column"
+                gap="2"
+                align={{ initial: 'start', md: 'end' }}
+                pr={{ md: '1' }}
+              >
                 <nav>
                   {navItems.map(({ link }, i) => {
                     return <CMSLink key={i} {...link} size="2" />
