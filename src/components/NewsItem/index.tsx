@@ -10,8 +10,9 @@ export const NewsItem: React.FC<NewsPostProps> = ({ updatedAt, title, descriptio
   return (
     <Grid
       columns={{ initial: '1', md: '8' }}
-      gap="6"
-      py="7"
+      gapX="6"
+      gapY={{ initial: '3', xs: '4', sm: '5', md: '6' }}
+      py={{ initial: '4', xs: '5', sm: '6', md: '7' }}
       style={{ borderTop: '2px solid var(--gray-7)' }}
     >
       <Box gridColumn={{ md: 'span 2' }}>
