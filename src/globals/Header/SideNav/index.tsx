@@ -29,15 +29,24 @@ export default function SideNav({ navItems, onLinkClick }: Props) {
               navItems.length > 0 &&
               navItems.map((item, index) => {
                 const { link, id, subNav } = item
+                const hasSubNav = Array.isArray(subNav) && subNav.length > 0
 
                 return (
-                  <Flex asChild key={id || index} justify="between" align="center" py="3" px="6">
+                  <Flex
+                    asChild
+                    key={id || index}
+                    justify="between"
+                    align="center"
+                    py="3"
+                    px="6"
+                    style={{ cursor: hasSubNav ? 'pointer' : 'auto' }}
+                  >
                     <li
                       style={{
                         borderBottom: '1px solid var(--gray-6)',
                       }}
                       onClick={
-                        subNav && subNav.length > 0
+                        hasSubNav
                           ? () => {
                               setClickedItem(link.label)
                               setIsSubMenuVisible(true)
@@ -54,7 +63,7 @@ export default function SideNav({ navItems, onLinkClick }: Props) {
                         }}
                         {...link}
                       />
-                      {subNav && subNav.length > 0 && <ChevronRightIcon size={24} />}
+                      {hasSubNav && <ChevronRightIcon size={24} />}
                     </li>
                   </Flex>
                 )
