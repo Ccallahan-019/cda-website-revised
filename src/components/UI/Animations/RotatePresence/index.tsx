@@ -19,7 +19,6 @@ export const RotatePresence: React.FC<Props> = ({ clicked, onClick, firstIcon, s
           animate={{ rotate: 0, opacity: 1 }}
           exit={{ rotateZ: -90, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ cursor: 'pointer' }}
         >
           {firstIcon}
         </motion.div>
@@ -31,7 +30,6 @@ export const RotatePresence: React.FC<Props> = ({ clicked, onClick, firstIcon, s
           animate={{ rotate: 0, opacity: 1 }}
           exit={{ rotateZ: 90, opacity: 0 }}
           transition={{ duration: 0.2 }}
-          style={{ cursor: 'pointer' }}
         >
           {secondIcon}
         </motion.div>

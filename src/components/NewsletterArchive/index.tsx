@@ -4,7 +4,7 @@ import { Newsletter } from '@/payload-types'
 import { Card } from '../UI/RadixComponents/Card'
 import { Box, Flex, Grid, IconButton, Select, Tooltip } from '@radix-ui/themes'
 import { Text } from '../UI/RadixComponents/Typography/Text'
-import { Link } from '../UI/RadixComponents/Typography/Link'
+import { Link } from '../UI/RadixComponents/Typography/Links'
 import { DownloadIcon } from 'lucide-react'
 import { formatDateTime } from '@/utilities/formatDateTime'
 import { useState } from 'react'
@@ -69,7 +69,7 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
                 {newsletter.url && (
                   <Tooltip content="Download">
                     <Link href={newsletter.url} newTab>
-                      <IconButton variant="soft" style={{ cursor: 'pointer' }}>
+                      <IconButton variant="soft">
                         <DownloadIcon size={20} />
                       </IconButton>
                     </Link>

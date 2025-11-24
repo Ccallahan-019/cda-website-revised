@@ -1,6 +1,7 @@
-import { Button, ButtonProps, Flex } from '@radix-ui/themes'
+import { ButtonProps, Flex } from '@radix-ui/themes'
 import { ArrowDownIcon } from 'lucide-react'
 import { AnimateBounce } from '../Animations/AnimateBounce'
+import { Button } from '../RadixComponents/Buttons'
 
 export const ScrollButton: React.FC<
   { scrollRef: React.RefObject<HTMLElement | null>; label: string } & ButtonProps
@@ -18,7 +19,7 @@ export const ScrollButton: React.FC<
   }
 
   return (
-    <Button onClick={handleClick} {...props} style={{ cursor: 'pointer' }}>
+    <Button onClick={handleClick} {...props}>
       <Flex gap="2" align="center">
         {label}
         <AnimateBounce distance={-3} duration={1}>

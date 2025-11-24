@@ -2,10 +2,10 @@
 
 import { Fragment, useMemo, useState } from 'react'
 import { Pagination } from '@/components/UI/Pagination'
-import { Link } from '@/components/UI/RadixComponents/Typography/Link'
+import { Link } from '@/components/UI/RadixComponents/Typography/Links'
 import { Court } from '@/payload-types'
 import { formatDateTime } from '@/utilities/formatDateTime'
-import { Flex, Table, Text } from '@radix-ui/themes'
+import { Flex, IconButton, Table, Text } from '@radix-ui/themes'
 import { ArrowDownUpIcon } from 'lucide-react'
 import { SortKey } from '@/utilities/typedefs'
 
@@ -98,12 +98,9 @@ export const CourtTable: React.FC<{
       <Table.ColumnHeaderCell>
         <Flex gap="2" align="center">
           <Fragment>{label}</Fragment>
-          <ArrowDownUpIcon
-            size={18}
-            strokeWidth={2.25}
-            onClick={() => onSort(sortKey)}
-            style={{ cursor: 'pointer' }}
-          />
+          <IconButton variant="ghost" size="1">
+            <ArrowDownUpIcon size={18} strokeWidth={2.25} onClick={() => onSort(sortKey)} />
+          </IconButton>
         </Flex>
       </Table.ColumnHeaderCell>
     )

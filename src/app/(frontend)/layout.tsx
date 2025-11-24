@@ -51,7 +51,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   size="3"
                   style={{
                     boxShadow: 'var(--shadow-5)',
-                    cursor: 'pointer',
                     background: 'var(--accent-10)',
                   }}
                 />
