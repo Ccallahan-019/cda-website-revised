@@ -101,7 +101,7 @@ export const MediaBlock: React.FC<
               <Grid columns={{ initial: '1', sm: '2' }} gap="3">
                 {Array.isArray(links) &&
                   links.length > 0 &&
-                  links.map(({ link }, index) => <CMSLink key={index} {...link} size="3" />)}
+                  links.map(({ link }, index) => <CMSLink key={index} {...link} />)}
               </Grid>
             </Flex>
           </Flex>

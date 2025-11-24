@@ -10,13 +10,15 @@ import type { SerializedEditorState } from '@payloadcms/richtext-lexical/lexical
 import { fields } from './fields'
 import { getClientSideURL } from '@/utilities/getURL'
 
-import { Container } from '@/components/UI/RadixComponents/Layout/Container'
-import { Card } from '@/components/UI/RadixComponents/Card'
-import { Box, Button, Flex, Grid, Spinner } from '@radix-ui/themes'
-import { Text } from '@/components/UI/RadixComponents/Typography/Text'
+import { Box, Flex, Grid, Spinner } from '@radix-ui/themes'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { buildZodSchema } from './buildZodSchema'
+
+import { Container } from '@/components/UI/RadixComponents/Layout/Container'
+import { Card } from '@/components/UI/RadixComponents/Card'
+import { Text } from '@/components/UI/RadixComponents/Typography/Text'
+import { SecondaryButton } from '@/components/UI/RadixComponents/Buttons'
 
 export type FormBlockType = {
   blockName?: string
@@ -165,8 +167,7 @@ export const FormBlock: React.FC<
                       })}
                   </Flex>
 
-                  <Button
-                    color="amber"
+                  <SecondaryButton
                     form={formID}
                     type="submit"
                     disabled={isLoading && !hasSubmitted}
@@ -179,7 +180,7 @@ export const FormBlock: React.FC<
                     ) : (
                       submitButtonLabel
                     )}
-                  </Button>
+                  </SecondaryButton>
                 </form>
               </Flex>
             )}

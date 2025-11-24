@@ -78,7 +78,9 @@ export const HighImpactHero: React.FC<HighImpactHeroProps> = ({
                 <Grid columns={{ initial: '1', sm: '2' }} gap="3">
                   {Array.isArray(links) &&
                     links.length > 0 &&
-                    links.map(({ link }, index) => <CMSLink key={index} {...link} size="4" />)}
+                    links.map(({ link }, index) => (
+                      <CMSLink key={index} {...link} size={{ initial: '3', xs: '4' }} />
+                    ))}
                 </Grid>
               </Flex>
             </Flex>

@@ -39,7 +39,7 @@ export const HeaderNav: React.FC<Props> = ({
                 onMouseLeave={onMouseLeave}
               >
                 <Flex height="100%" align="center" key={i}>
-                  <CMSLink weight="regular" {...link} />
+                  <CMSLink {...link} size="2" />
                 </Flex>
 
                 <Box position="absolute" top="100%" left="0" width="100%">

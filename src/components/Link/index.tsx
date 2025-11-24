@@ -1,13 +1,15 @@
 import React from 'react'
-import { Button, ButtonProps, Flex, LinkProps } from '@radix-ui/themes'
-import { Link } from '../UI/RadixComponents/Typography/Link'
-import { Text } from '../UI/RadixComponents/Typography/Text'
+import { ButtonProps, Flex, LinkProps } from '@radix-ui/themes'
+import { Link } from '@/components/UI/RadixComponents/Typography/Links'
+import { Text } from '@/components/UI/RadixComponents/Typography/Text'
+import { Button } from '@/components/UI/RadixComponents/Buttons'
 
 import type { Page, Charity, Event, Fundraiser, Project, Court, Media } from '@/payload-types'
 import { ExternalLinkIcon } from 'lucide-react'
+import { DestructiveButton, SecondaryButton } from '@/components/UI/RadixComponents/Buttons'
 
 type CMSLinkType = {
-  appearance?: 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive' | null
+  appearance?: 'inline' | 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive' | null
   color?: 'primary' | 'secondary'
   children?: React.ReactNode
   className?: string
@@ -26,6 +28,29 @@ type CMSLinkType = {
   onClick?: () => void
 }
 
+const resolveHref = (options: {
+  type?: CMSLinkType['type']
+  reference?: CMSLinkType['reference']
+  url?: string | null
+}): string | null => {
+  const { type, reference, url } = options
+
+  if (type === 'reference' && reference && typeof reference.value === 'object') {
+    if ('slug' in reference.value && reference.value.slug) {
+      const base = reference.relationTo !== 'pages' ? `/${reference.relationTo}` : ''
+      return `${base}/${reference.value.slug}`
+    }
+
+    if ('url' in reference.value && reference.value.url) {
+      return reference.value.url
+    }
+
+    return url ?? null
+  }
+
+  return url ?? null
+}
+
 export const CMSLink: React.FC<CMSLinkType> = (props) => {
   const {
     type,
@@ -37,34 +62,23 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     newTab,
     reference,
     url,
-    size = '2',
-    weight = 'regular',
+    size,
+    weight,
     disabled = false,
     onClick,
   } = props
 
-  const colors = {
-    primary: 'purple',
-    secondary: 'amber',
-  }
-
-  let href: string | null | undefined = undefined
-
-  if (type === 'reference' && typeof reference?.value === 'object') {
-    if ('slug' in reference.value && reference?.value.slug) {
-      href = `${reference?.relationTo !== 'pages' ? `/${reference?.relationTo}` : ''}/${
-        reference.value.slug
-      }`
-    } else if ('url' in reference?.value && reference?.value.url) {
-      href = `${reference?.value.url}`
-    } else {
-      href = url
-    }
-  } else {
-    href = url
-  }
+  const href = resolveHref({ type, reference, url })
 
   if (!href) return null
+
+  const content = (
+    <Flex align="center" gap="2">
+      {label && label}
+      {children}
+      {!disabled && newTab && <ExternalLinkIcon size={15} />}
+    </Flex>
+  )
 
   const InnerLink: React.FC = () => {
     if (disabled) {
@@ -72,74 +86,40 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
         <Text weight={weight} style={{ color: 'inherit' }}>
           <Flex align="center" gap="2">
             {label && label}
-            {children && children}
+            {children}
+            {!disabled && newTab && <ExternalLinkIcon size={15} />}
           </Flex>
         </Text>
       )
     }
 
     return (
-      <Flex asChild align="center" gap="2">
-        <Link
-          weight={weight}
-          style={{ color: 'inherit' }}
-          href={href || url || ''}
-          newTab={newTab ?? false}
-        >
-          {label && label}
-          {children && children}
-          {newTab && <ExternalLinkIcon size={15} />}
-        </Link>
-      </Flex>
+      <Link weight={weight} style={{ color: 'inherit' }} href={href} newTab={newTab ?? false}>
+        {content}
+      </Link>
     )
   }
 
-  if (!appearance || appearance === 'inline') {
-    return (
-      <Button
-        className={className}
-        size={size}
-        color={colors[color] as ButtonProps['color']}
-        variant="ghost"
-        onClick={onClick}
-      >
-        <InnerLink />
-      </Button>
-    )
-  }
+  const isInline = !appearance || appearance === 'inline'
+  const isDefaultAppearance = appearance === 'default'
+  const isDestructive = appearance === 'destructive'
+  const isSecondary = color === 'secondary' && !isDestructive
 
-  if (appearance === 'default') {
-    return (
-      <Button
-        className={className}
-        size={size}
-        color={colors[color] as ButtonProps['color']}
-        variant="surface"
-        onClick={onClick}
-        style={{ flexGrow: 1 }}
-      >
-        <InnerLink />
-      </Button>
-    )
-  }
+  type Variant = NonNullable<ButtonProps['variant']>
 
-  if (appearance === 'destructive') {
-    return (
-      <Button className={className} size={size} variant="outline" color="red" onClick={onClick}>
-        <InnerLink />
-      </Button>
-    )
-  }
+  const baseVariant: Variant = isInline
+    ? 'ghost'
+    : isDefaultAppearance
+      ? 'surface'
+      : (appearance as Variant)
+
+  const ButtonComponent = isDestructive ? DestructiveButton : isSecondary ? SecondaryButton : Button
+
+  const finalVariant: Variant = isDestructive ? 'outline' : baseVariant
 
   return (
-    <Button
-      className={className}
-      size={size}
-      color={colors[color] as ButtonProps['color']}
-      variant={appearance}
-      onClick={onClick}
-    >
+    <ButtonComponent className={className} size={size} variant={finalVariant} onClick={onClick}>
       <InnerLink />
-    </Button>
+    </ButtonComponent>
   )
 }

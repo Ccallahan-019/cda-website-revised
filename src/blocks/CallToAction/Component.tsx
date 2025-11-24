@@ -25,7 +25,7 @@ export const CallToActionBlock: React.FC<Props> = ({ ctaLinks, richText, enableG
         <Flex align="center">{richText && <RichText data={richText} />}</Flex>
         <Flex direction="column" gap="4" flexShrink="0">
           {(ctaLinks || []).map(({ link }, i) => {
-            return <CMSLink key={i} size="2" {...link} />
+            return <CMSLink key={i} {...link} />
           })}
         </Flex>
       </Flex>

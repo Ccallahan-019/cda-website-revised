@@ -1,10 +1,11 @@
 'use client'
 
-import { Button, ButtonProps, Flex } from '@radix-ui/themes'
+import { ButtonProps, Flex } from '@radix-ui/themes'
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { ArrowUpFromDotIcon } from 'lucide-react'
 import { Text } from '../RadixComponents/Typography/Text'
+import { Button } from '../RadixComponents/Buttons'
 
 export const ScrollToTopButton: React.FC<{ threshold?: number } & ButtonProps> = ({
   threshold = 250,

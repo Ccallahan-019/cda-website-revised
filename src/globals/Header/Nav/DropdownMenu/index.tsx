@@ -47,7 +47,11 @@ export const DropdownMenu: React.FC<Props> = ({ navItem, onLinkClick }) => {
                       nav.links.map((item, index) => (
                         <li key={index}>
                           {typeof item === 'object' && (
-                            <CMSLink {...item.link} onClick={onLinkClick} />
+                            <CMSLink
+                              size={{ initial: '1', xs: '2' }}
+                              {...item.link}
+                              onClick={onLinkClick}
+                            />
                           )}
                         </li>
                       ))}

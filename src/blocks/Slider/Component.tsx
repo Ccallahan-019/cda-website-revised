@@ -41,6 +41,7 @@ export const SliderBlock: React.FC<SliderBlockProps> = (props) => {
       <Flex justify="center" gap="2" mb="4">
         <Button
           ref={prevRef}
+          size={{ initial: '2', xs: '3' }}
           variant="soft"
           onClick={() => {
             setActiveIndex(activeIndex - 1)
@@ -51,6 +52,7 @@ export const SliderBlock: React.FC<SliderBlockProps> = (props) => {
         </Button>
         <Button
           ref={nextRef}
+          size={{ initial: '2', xs: '3' }}
           variant="soft"
           onClick={() => {
             setActiveIndex(activeIndex + 1)

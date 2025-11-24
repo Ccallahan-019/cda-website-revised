@@ -1,8 +1,9 @@
 import { CMSLink } from '@/components/Link'
 import { Text } from '@/components/UI/RadixComponents/Typography/Text'
 import { Header } from '@/payload-types'
-import { Button, Flex, Grid } from '@radix-ui/themes'
+import { Flex, Grid } from '@radix-ui/themes'
 import { MoveLeftIcon } from 'lucide-react'
+import { Button } from '@/components/UI/RadixComponents/Buttons'
 
 type Props = {
   onClick: () => void
@@ -13,7 +14,7 @@ type Props = {
 export default function SubMenu({ onClick, onLinkClick, subNav }: Props) {
   return (
     <Flex direction="column" gap="4" style={{ borderTop: '1px solid var(--gray-6)' }} pb="3">
-      <Button onClick={onClick} type="button" variant="soft" radius="none">
+      <Button onClick={onClick} variant="soft" radius="none">
         <Flex gap="2" width="100%">
           <MoveLeftIcon size={20} />
           <Text as="span">Back</Text>
