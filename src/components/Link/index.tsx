@@ -3,6 +3,7 @@ import { Button, ButtonProps, Flex, LinkProps } from '@radix-ui/themes'
 import { Link } from '../UI/RadixComponents/Typography/Link'
 
 import type { Page, Charity, Event, Fundraiser, Project, Court, Media } from '@/payload-types'
+import { Text } from '../UI/RadixComponents/Typography/Text'
 
 type CMSLinkType = {
   appearance?: 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive' | null
@@ -20,6 +21,7 @@ type CMSLinkType = {
   size?: ButtonProps['size']
   weight?: LinkProps['weight']
   linkColor?: LinkProps['color']
+  disabled?: boolean
   onClick?: () => void
 }
 
@@ -36,7 +38,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     url,
     size = '2',
     weight = 'regular',
-    linkColor,
+    disabled = false,
     onClick,
   } = props
 
@@ -63,21 +65,44 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
 
   if (!href) return null
 
-  if (!appearance || appearance === 'inline') {
+  const InnerLink: React.FC = () => {
+    if (disabled) {
+      return (
+        <Text weight={weight} style={{ color: 'inherit' }}>
+          <Flex align="center" gap="2">
+            {label && label}
+            {children && children}
+          </Flex>
+        </Text>
+      )
+    }
+
     return (
       <Link
-        color={linkColor}
         weight={weight}
-        underline="hover"
-        newTab={newTab ?? false}
+        style={{ color: 'inherit' }}
         href={href || url || ''}
-        onClick={onClick}
+        newTab={newTab ?? false}
       >
         <Flex align="center" gap="2">
           {label && label}
           {children && children}
         </Flex>
       </Link>
+    )
+  }
+
+  if (!appearance || appearance === 'inline') {
+    return (
+      <Button
+        className={className}
+        size={size}
+        color={colors[color] as ButtonProps['color']}
+        variant="ghost"
+        onClick={onClick}
+      >
+        <InnerLink />
+      </Button>
     )
   }
 
@@ -91,12 +116,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
         onClick={onClick}
         style={{ flexGrow: 1 }}
       >
-        <Link style={{ color: 'inherit' }} href={href || url || ''} newTab={newTab ?? false}>
-          <Flex align="center" gap="2">
-            {label && label}
-            {children && children}
-          </Flex>
-        </Link>
+        <InnerLink />
       </Button>
     )
   }
@@ -104,12 +124,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
   if (appearance === 'destructive') {
     return (
       <Button className={className} size={size} variant="outline" color="red" onClick={onClick}>
-        <Link style={{ color: 'inherit' }} href={href || url || ''} newTab={newTab ?? false}>
-          <Flex align="center" gap="2">
-            {label && label}
-            {children && children}
-          </Flex>
-        </Link>
+        <InnerLink />
       </Button>
     )
   }
@@ -122,12 +137,7 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
       variant={appearance}
       onClick={onClick}
     >
-      <Link style={{ color: 'inherit' }} href={href || url || ''} newTab={newTab ?? false}>
-        <Flex align="center" gap="2">
-          {label && label}
-          {children && children}
-        </Flex>
-      </Link>
+      <InnerLink />
     </Button>
   )
 }
