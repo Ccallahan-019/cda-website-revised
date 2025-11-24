@@ -24,7 +24,7 @@ export default function SubMenu({ onClick, onLinkClick, subNav }: Props) {
         {subNav?.map((navItem, index) => (
           <Flex direction="column" gap="3" key={navItem.id || index}>
             <Text style={{ textTransform: 'uppercase' }}>{navItem.label}</Text>
-            <Grid asChild columns="2" gap="2">
+            <Grid asChild columns="2" gap="1">
               <ul>
                 {navItem.links &&
                   navItem.links.map((item, index) => (
