@@ -26,7 +26,12 @@ export const DropdownMenu: React.FC<Props> = ({ navItem, onLinkClick }) => {
           {Array.isArray(subNav) &&
             subNav.length > 0 &&
             subNav.map((nav, navIndex) => (
-              <Box key={navIndex} gridColumn={description ? 'span 3' : 'span 4'}>
+              <Flex
+                direction="column"
+                key={navIndex}
+                gridColumn={description ? 'span 3' : 'span 4'}
+                gap="3"
+              >
                 <Heading
                   as="h6"
                   weight="regular"
@@ -35,7 +40,7 @@ export const DropdownMenu: React.FC<Props> = ({ navItem, onLinkClick }) => {
                 >
                   {nav.label}
                 </Heading>
-                <Flex asChild direction="column" mt="2" gap="2">
+                <Flex asChild direction="column" gap="1">
                   <ul>
                     {Array.isArray(nav.links) &&
                       nav.links.length > 0 &&
@@ -48,7 +53,7 @@ export const DropdownMenu: React.FC<Props> = ({ navItem, onLinkClick }) => {
                       ))}
                   </ul>
                 </Flex>
-              </Box>
+              </Flex>
             ))}
         </Grid>
       </Container>
