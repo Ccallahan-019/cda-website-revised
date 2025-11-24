@@ -5,12 +5,7 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
-
-type ProtocolType = 'http' | 'https' | undefined
-
-const NEXT_PUBLIC_SERVER_URL = process.env.VERCEL_PROJECT_PRODUCTION_URL
-  ? `${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-  : process.env.__NEXT_PRIVATE_ORIGIN || 'http://localhost:3000'
+import { getServerSideURL } from '@/utilities/getURL'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -93,22 +88,9 @@ export const Newsletters: CollectionConfig = {
     staticDir: path.resolve(dirname, '../../public/newsletters'),
     mimeTypes: ['application/pdf'],
     skipSafeFetch: [
-      ...[NEXT_PUBLIC_SERVER_URL]
-        .filter((item) => {
-          const url = new URL(item)
-
-          return url.protocol === 'http' || url.protocol === 'https'
-        })
-        .map((item) => {
-          const url = new URL(item)
-
-          return {
-            protocol: url.protocol as ProtocolType,
-            hostname: url.hostname,
-            port: url.port,
-            pathname: 'admin/collections/newsletters/**',
-          }
-        }),
+      {
+        hostname: getServerSideURL(),
+      },
     ],
   },
 }
