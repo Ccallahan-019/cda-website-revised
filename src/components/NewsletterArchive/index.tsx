@@ -35,8 +35,8 @@ export const NewsletterArchive: React.FC<{ newsletters: Newsletter[] }> = (props
   })
 
   return (
-    <Card size="4">
-      <Flex direction="column" gap="5">
+    <Card size={{ initial: '2', xs: '3', sm: '4' }}>
+      <Flex direction="column" gap={{ initial: '4', xs: '5' }}>
         <Flex justify="end">
           <Select.Root size="3" onValueChange={handleYearChange} defaultValue="2025">
             <Select.Trigger />
