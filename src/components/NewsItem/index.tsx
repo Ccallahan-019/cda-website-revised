@@ -30,7 +30,7 @@ export const NewsItem: React.FC<NewsPostProps> = ({ updatedAt, title, descriptio
         {Array.isArray(links) &&
           links.length > 0 &&
           links.map(({ link }, index) => (
-            <CMSLink key={index} {...link} size="4">
+            <CMSLink key={index} {...link}>
               <MoveRightIcon size={20} />
             </CMSLink>
           ))}
