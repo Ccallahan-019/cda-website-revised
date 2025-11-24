@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button, ButtonProps, Flex, LinkProps } from '@radix-ui/themes'
 import { Link } from '../UI/RadixComponents/Typography/Link'
+import { Text } from '../UI/RadixComponents/Typography/Text'
 
 import type { Page, Charity, Event, Fundraiser, Project, Court, Media } from '@/payload-types'
-import { Text } from '../UI/RadixComponents/Typography/Text'
+import { ExternalLinkIcon } from 'lucide-react'
 
 type CMSLinkType = {
   appearance?: 'default' | 'solid' | 'soft' | 'outline' | 'ghost' | 'destructive' | null
@@ -78,17 +79,18 @@ export const CMSLink: React.FC<CMSLinkType> = (props) => {
     }
 
     return (
-      <Link
-        weight={weight}
-        style={{ color: 'inherit' }}
-        href={href || url || ''}
-        newTab={newTab ?? false}
-      >
-        <Flex align="center" gap="2">
+      <Flex asChild align="center" gap="2">
+        <Link
+          weight={weight}
+          style={{ color: 'inherit' }}
+          href={href || url || ''}
+          newTab={newTab ?? false}
+        >
           {label && label}
           {children && children}
-        </Flex>
-      </Link>
+          {newTab && <ExternalLinkIcon size={15} />}
+        </Link>
+      </Flex>
     )
   }
 

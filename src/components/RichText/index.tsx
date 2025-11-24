@@ -15,7 +15,7 @@ import type {
 } from '@/payload-types'
 
 import { Box, Flex } from '@radix-ui/themes'
-import { CheckIcon, SquareIcon } from 'lucide-react'
+import { CheckIcon, ExternalLinkIcon, SquareIcon } from 'lucide-react'
 import { Heading } from '../UI/RadixComponents/Typography/Heading'
 import { Blockquote } from '../UI/RadixComponents/Typography/Blockquote'
 import { Text } from '../UI/RadixComponents/Typography/Text'
@@ -159,6 +159,12 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     return (
       <Link href={href || '/'} newTab={newTab}>
         {children}
+        {newTab && (
+          <ExternalLinkIcon
+            style={{ display: 'inline', paddingLeft: '1px', verticalAlign: 'top' }}
+            size={14}
+          />
+        )}
       </Link>
     )
   },
