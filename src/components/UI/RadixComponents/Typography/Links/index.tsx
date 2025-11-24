@@ -28,3 +28,7 @@ export const Link: React.FC<{ newTab?: boolean } & LinkProps> = ({
     </RadixLink>
   )
 }
+
+export const SecondaryLink: React.FC<{ newTab?: boolean } & Omit<LinkProps, 'color'>> = (props) => {
+  return <Link color="amber" {...props} />
+}
