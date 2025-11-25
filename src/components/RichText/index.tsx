@@ -14,8 +14,8 @@ import type {
   CallToActionBlock as CTABlockProps,
 } from '@/payload-types'
 
-import { Box, Flex } from '@radix-ui/themes'
-import { CheckIcon, ExternalLinkIcon, SquareIcon } from 'lucide-react'
+import { Box } from '@radix-ui/themes'
+import { ExternalLinkIcon } from 'lucide-react'
 import { Heading } from '../UI/RadixComponents/Typography/Heading'
 import { Blockquote } from '../UI/RadixComponents/Typography/Blockquote'
 import { Text } from '../UI/RadixComponents/Typography/Text'
@@ -24,16 +24,25 @@ import { FormattedText } from './FormattedText'
 import { MediaBlock } from '@/blocks/MediaBlock/Component'
 import { BannerBlock } from '@/blocks/Banner/Component'
 import { CallToActionBlock } from '@/blocks/CallToAction/Component'
+import { List, ListItem } from './Lists'
 
 type NodeTypes =
   | DefaultNodeTypes
   | SerializedBlockNode<MediaBlockProps | BannerBlockProps | CTABlockProps>
 
-const Spacer: React.FC<{ children: React.ReactNode; isBlock?: boolean }> = ({
-  children,
-  isBlock,
-}) => {
-  return <div className={`${isBlock ? 'richtext-block' : 'richtext-child'}`}>{children}</div>
+const Spacer: React.FC<{
+  children: React.ReactNode
+  isBlock?: boolean
+  indent?: number
+}> = ({ children, isBlock, indent }) => {
+  return (
+    <Box
+      pl={indent ? `${indent * 2}rem` : '0'}
+      className={`${isBlock ? 'richtext-block' : 'richtext-child'}`}
+    >
+      {children}
+    </Box>
+  )
 }
 
 const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
@@ -41,7 +50,10 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
   if (typeof value !== 'object') {
     throw new Error('Expected value to be an object')
   }
+
   const slug = value.slug
+  const url = value.url
+
   switch (relationTo) {
     case 'court':
       return `courts/${slug}`
@@ -54,7 +66,7 @@ const internalDocToHref = ({ linkNode }: { linkNode: SerializedLinkNode }) => {
     case 'project':
       return `projects/${slug}`
     case 'media':
-      return `${value.url}`
+      return `${url}`
     default:
       return `/${slug}`
   }
@@ -67,10 +79,8 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     const { indent } = node
 
     return (
-      <Spacer>
-        <Box pl={`${indent * 24}px`}>
-          <Text as="p">{nodesToJSX({ nodes: node.children })}</Text>
-        </Box>
+      <Spacer indent={indent}>
+        <Text as="p">{nodesToJSX({ nodes: node.children })}</Text>
       </Spacer>
     )
   },
@@ -79,63 +89,36 @@ const jsxConverters: JSXConvertersFunction<NodeTypes> = ({ defaultConverters }) 
     const { indent, tag } = node
 
     return (
-      <Spacer>
-        <Box pl={`${indent * 24}px`}>
-          <Heading as={tag}>{nodesToJSX({ nodes: node.children })}</Heading>
-        </Box>
+      <Spacer indent={indent}>
+        <Heading as={tag}>{nodesToJSX({ nodes: node.children })}</Heading>
       </Spacer>
     )
   },
 
-  quote: ({ node, nodesToJSX }) => {
+  quote: ({ node, parent, nodesToJSX }) => {
     const { indent } = node
 
     return (
-      <Spacer>
-        <Box pl={`${indent * 24}px`}>
-          <Blockquote>{nodesToJSX({ nodes: node.children })}</Blockquote>
-        </Box>
+      <Spacer indent={indent}>
+        <Blockquote>{nodesToJSX({ nodes: node.children, parent })}</Blockquote>
       </Spacer>
     )
   },
 
   list: ({ node, nodesToJSX }) => {
-    const { indent, listType } = node
+    const { listType } = node
 
-    const listClass = {
-      number: 'list-decimal',
-      bullet: 'list-disc',
-      check: 'list-none',
-    }[listType]
-
-    return (
-      <Spacer>
-        <Box pl={`${indent * 24}px`}>
-          <ul className={`${listClass} list-outside pl-[1.5rem]`}>
-            {nodesToJSX({ nodes: node.children })}
-          </ul>
-        </Box>
-      </Spacer>
-    )
+    return <List listType={listType}>{nodesToJSX({ nodes: node.children })}</List>
   },
 
   listitem: ({ node, nodesToJSX }) => {
-    const { checked } = node
-
-    const isChecklistItem = typeof checked === 'boolean'
-    const isChecked = checked === true
+    const { checked, indent, value } = node
+    const subList = node.children && node.children[0]?.type === 'list'
 
     return (
-      <li>
-        {isChecklistItem ? (
-          <Flex gap="2" align="center">
-            {isChecked ? <CheckIcon color="var(--purple-9)" /> : <SquareIcon />}
-            <Box>{nodesToJSX({ nodes: node.children })}</Box>
-          </Flex>
-        ) : (
-          <Box>{nodesToJSX({ nodes: node.children })}</Box>
-        )}
-      </li>
+      <ListItem checked={checked} isSubList={subList} indent={indent} value={value}>
+        {nodesToJSX({ nodes: node.children })}
+      </ListItem>
     )
   },
 
