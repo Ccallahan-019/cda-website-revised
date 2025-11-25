@@ -5,7 +5,15 @@ import { fileURLToPath } from 'url'
 
 import { anyone } from '../access/anyone'
 import { authenticated } from '../access/authenticated'
-import { getServerSideURL } from '@/utilities/getURL'
+import { AllowListType } from './Media'
+
+const allowList: AllowListType[] = [
+  {
+    hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL,
+    pathname: '/api/media/*',
+    protocol: 'https',
+  },
+]
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -87,10 +95,18 @@ export const Newsletters: CollectionConfig = {
   upload: {
     staticDir: path.resolve(dirname, '../../public/newsletters'),
     mimeTypes: ['application/pdf'],
-    skipSafeFetch: [
-      {
-        hostname: getServerSideURL(),
-      },
-    ],
+    skipSafeFetch: allowList
+      .filter((item) => item.hostname)
+      .map((item) => {
+        const { hostname, pathname, port, protocol, search } = item
+
+        return {
+          hostname: hostname as string,
+          pathname,
+          port,
+          protocol,
+          search,
+        }
+      }),
   },
 }
