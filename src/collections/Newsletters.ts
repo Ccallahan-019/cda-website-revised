@@ -10,7 +10,7 @@ import { AllowListType } from './Media'
 const allowList: AllowListType[] = [
   {
     hostname: process.env.VERCEL_PROJECT_PRODUCTION_URL,
-    pathname: '/api/media/*',
+    pathname: '/api/newsletters/file/*',
     protocol: 'https',
   },
 ]
