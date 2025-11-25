@@ -271,6 +271,8 @@ export interface HighImpactHero {
   blockType: 'highImpactHero';
 }
 /**
+ * Ensure the filename of the media you are uploading contains no spaces. If it does, the media upload will fail.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */

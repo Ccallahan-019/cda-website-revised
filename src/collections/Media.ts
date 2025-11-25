@@ -32,6 +32,10 @@ export const Media: CollectionConfig = {
     read: anyone,
     update: authenticated,
   },
+  admin: {
+    description:
+      'Ensure the filename of the media you are uploading contains no spaces. If it does, the media upload will fail.',
+  },
   fields: [
     {
       name: 'alt',
